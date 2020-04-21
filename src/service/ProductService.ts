@@ -7,11 +7,11 @@ import ProductRepository from '../repository/ProductRepository';
 export default class ProductService {
     constructor(private readonly productRepository: ProductRepository) { }
 
-    public async create(data: any): Promise<Product | null> {
+    public async save(data: any | Product): Promise<Product | null> {
         return this.productRepository.save(data);
     }
 
-    public async getAll(): Promise<Product[]> {
+    public async findAll(): Promise<Product[]> {
         return this.productRepository.findAll();
     }
 }

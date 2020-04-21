@@ -17,7 +17,7 @@ export default class ShowAllProductsController {
 
     @Get()
     private async getAllProducts(request: Request, response: Response): Promise<void> {
-        const products: Product[] = await this.productService.getAll();
+        const products: Product[] = await this.productService.findAll();
         response.json(products);
     }
 }

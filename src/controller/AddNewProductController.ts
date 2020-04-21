@@ -17,7 +17,7 @@ export default class AddNewProductController {
 
     @Post()
     private async addNewProduct(request: Request, response: Response): Promise<void> {
-        const product: Product = await this.productService.create(request.body);
+        const product: Product = await this.productService.save(request.body);
         response.json(product);
     }
 }

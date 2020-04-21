@@ -2,6 +2,7 @@ import * as bodyParser from 'body-parser';
 import { Server } from '@overnightjs/core';
 import { container } from 'tsyringe';
 import { Logger } from '@overnightjs/logger';
+import mongoose from 'mongoose';
 import http from 'http';
 import ServerApplicationConfig from './ServerApplicationConfig';
 import FaviconController from '../controller/FaviconController';
@@ -20,9 +21,7 @@ export default class ServerApplication extends Server {
 
     private async launch(config: ServerApplicationConfig): Promise<void> {
         this.initializeRouterHandles();
-        this.initializeDatabase(config);
-        this.initializeModels();
-        await this.establishDBConnection();
+        await this.establishDBConnection(config);
         this.initControllers();
         this.startServer(config);
     }
@@ -32,16 +31,19 @@ export default class ServerApplication extends Server {
         this.app.use(bodyParser.urlencoded({ extended: true }));
     }
 
-    private initializeDatabase(config: ServerApplicationConfig): void {
-        // todo
-    }
-
-    private initializeModels(): void {
-        // todo
-    }
-
-    private async establishDBConnection(): Promise<void> {
-        // todo
+    private async establishDBConnection(config: ServerApplicationConfig): Promise<void> {
+        try {
+            await mongoose.connect(
+                config.dbUri,
+                {
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true,
+                });
+        } catch (err) {
+            Logger.Err('Unable to connect to the database.');
+            Logger.Err(err, true);
+            throw err;
+        }
     }
 
     private initControllers(): void {

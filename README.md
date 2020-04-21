@@ -5,6 +5,7 @@ Configured for `VSCode` IDE.
 ## Links:
 
 * [express documentation](https://expressjs.com/en/5x/api.html)
+* [mongoose api](https://mongoosejs.com/docs/api.html)
 * [mongoose schema types](https://mongoosejs.com/docs/schematypes.html)
 * [overnightjs](https://www.npmjs.com/package/@overnightjs/core)
 * [overnightjs logger](https://www.npmjs.com/package/@overnightjs/logger)

@@ -1,12 +1,11 @@
 # node-express-sequelize
-Test educational template project of `Node.js` `REST server`, based on `Express`, `Sequelize` using `TypeScript`.  
+Test educational template project of `Node.js` `REST server`, based on `Express`, `Mongoose` using `TypeScript`.  
 Configured for `VSCode` IDE.
 
 ## Links:
 
 * [express documentation](https://expressjs.com/en/5x/api.html)
-* [sequelize documentation](https://sequelize.org/v5/)
-* [sequelize-typescript](https://www.npmjs.com/package/sequelize-typescript)
+* [mongoose schema types](https://mongoosejs.com/docs/schematypes.html)
 * [overnightjs](https://www.npmjs.com/package/@overnightjs/core)
 * [overnightjs logger](https://www.npmjs.com/package/@overnightjs/logger)
 * [tsyringe](https://www.npmjs.com/package/tsyringe)

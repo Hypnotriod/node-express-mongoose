@@ -7,11 +7,11 @@ import Product from '../entity/Product';
  */
 
 const schema: Schema = new Schema({
-    name: { type: String, required: true, unique: true },
-    type: { type: String, required: true },
-    price: { type: Number, required: true },
-    inStockQuantity: { type: Number, required: true },
-    reservedQuantity: { type: Number, required: true },
+    name: { type: String, required: true, unique: true, trim: true, minlength: 3 },
+    type: { type: String, required: true, trim: true, minlength: 3 },
+    price: { type: Number, required: true, min: 0 },
+    inStockQuantity: { type: Number, required: true, min: 0 },
+    reservedQuantity: { type: Number, required: true, min: 0 },
     isHidden: { type: Boolean, required: true },
     discounts: { type: [Schema.Types.ObjectId], required: false },
 });

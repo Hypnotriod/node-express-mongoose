@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 import http from 'http';
 import ServerApplicationConfig from './ServerApplicationConfig';
 import FaviconController from '../controller/FaviconController';
+import ShowAllProductsController from '../controller/ShowAllProductsController';
+import AddNewProductController from '../controller/AddNewProductController';
 
 /**
  *
@@ -27,7 +29,9 @@ export default class ServerApplication extends Server {
     }
 
     private initializeRouterHandles(): void {
+        this.app.use(bodyParser.raw());
         this.app.use(bodyParser.json());
+        this.app.use(bodyParser.text());
         this.app.use(bodyParser.urlencoded({ extended: true }));
     }
 
@@ -49,6 +53,8 @@ export default class ServerApplication extends Server {
     private initControllers(): void {
         super.addControllers([
             container.resolve(FaviconController),
+            container.resolve(ShowAllProductsController),
+            container.resolve(AddNewProductController),
         ]);
     }
 

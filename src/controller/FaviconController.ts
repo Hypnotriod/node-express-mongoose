@@ -14,7 +14,7 @@ export default class FaviconController {
     constructor() { }
 
     @Get()
-    private getFavicon(req: Request, res: Response): void {
-        res.status(204);
+    private getFavicon(request: Request, response: Response): void {
+        response.status(204);
     }
 }

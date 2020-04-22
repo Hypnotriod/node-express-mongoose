@@ -2,6 +2,11 @@ import { singleton, injectable } from 'tsyringe';
 import Product from '../entity/Product';
 import ProductRepository from '../repository/ProductRepository';
 
+/**
+ *
+ * @author Ilya Pikin
+ */
+
 @injectable()
 @singleton()
 export default class ProductService {

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import Discount from '../entity/Discount';
+
 /**
  *
  * @author Ilya Pikin

@@ -1,12 +1,18 @@
 import { Model, Document } from 'mongoose';
 import { Logger } from '@overnightjs/logger';
 
+/**
+ *
+ * @author Ilya Pikin
+ */
+
 export default class Repository<T extends Document> {
     constructor(protected readonly model: Model<T>) { }
 
     public async save(data: T | any): Promise<T | null> {
         const entity: T = new this.model(data);
         try {
+            await entity.validate();
             return await entity.save();
         } catch (err) {
             Logger.Err(`Unable to save ${this.model.modelName} with data: ${JSON.stringify(data)}`);

@@ -11,7 +11,7 @@ const schema: Schema = new Schema({
     units: { type: String, required: true, lowercase: true, match: RegExp('^(pcs|kg|gr|t|l|gal|lb)$') },
     type: { type: String, required: true, trim: true, minlength: 3 },
     price: { type: Number, required: true, min: 0 },
-    currency: { type: String, required: true, trim: true, minlength: 3, maxlength: 3, uppercase: true },
+    currency: { type: String, required: true, trim: true, uppercase: true, match: RegExp('^[A-Z]{3}$') },
     inStockQuantity: { type: Number, required: true, min: 0 },
     reservedQuantity: { type: Number, required: true, min: 0 },
     isFractional: { type: Boolean, required: true },

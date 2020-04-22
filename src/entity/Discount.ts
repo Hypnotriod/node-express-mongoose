@@ -8,5 +8,6 @@ import DiscountRule from './DiscountRule';
 
 export default interface Discount extends Document {
     discount: number;
+    isActive: boolean;
     rule: DiscountRule;
 }

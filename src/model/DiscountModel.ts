@@ -7,10 +7,13 @@ import Discount from '../entity/Discount';
  */
 
 const schema: Schema = new Schema({
-    discount: { type: String, required: true },
+    discount: { type: String, required: true, unique: true, trim: true, minlength: 3 },
+    isActive: { type: Boolean, required: true },
     rule: {
-        type: { type: String, required: true },
+        type: { type: String, required: true, unique: true, trim: true, minlength: 3 },
     }
+}, {
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 });
 
 export default mongoose.model<Discount>('discount', schema);

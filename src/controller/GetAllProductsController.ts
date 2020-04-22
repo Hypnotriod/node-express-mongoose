@@ -12,7 +12,7 @@ import Product from '../entity/Product';
 @injectable()
 @singleton()
 @Controller('products')
-export default class ShowAllProductsController {
+export default class GetAllProductsController {
     constructor(private readonly productService: ProductService) { }
 
     @Get()

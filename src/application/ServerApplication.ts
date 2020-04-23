@@ -10,6 +10,7 @@ import GetAllProductsController from '../controller/GetAllProductsController';
 import AddNewProductController from '../controller/AddNewProductController';
 import AddNewDiscountController from '../controller/AddNewDiscountController';
 import GetAllDiscountsController from '../controller/GetAllDiscountsController';
+import AddNewUserController from '../controller/AddNewUserController';
 
 /**
  *
@@ -57,6 +58,7 @@ export default class ServerApplication extends Server {
             container.resolve(GetAllDiscountsController),
             container.resolve(AddNewProductController),
             container.resolve(AddNewDiscountController),
+            container.resolve(AddNewUserController),
         ]);
     }
 

@@ -16,7 +16,7 @@ export default class GetAllDiscountsController {
     constructor(private readonly discountService: DiscountService) { }
 
     @Get()
-    private async getAllProducts(request: Request, response: Response): Promise<void> {
+    private async getAllDiscounts(request: Request, response: Response): Promise<void> {
         const discount: Discount[] = await this.discountService.findAll();
         response.json(discount);
     }

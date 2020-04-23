@@ -11,7 +11,7 @@ export default class AddNewDiscountController {
     constructor(private readonly discountService: DiscountService) { }
 
     @Post()
-    private async addNewProduct(request: Request, response: Response): Promise<void> {
+    private async addNewDiscount(request: Request, response: Response): Promise<void> {
         const discount: Discount = await this.discountService.save(request.body);
         response.json(discount);
     }

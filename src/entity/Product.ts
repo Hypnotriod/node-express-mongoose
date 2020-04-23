@@ -6,11 +6,11 @@ import Discount from './Discount';
  * @author Ilya Pikin
  */
 
-export type Units = 'pcs' | 'kg' | 'gr' | 't' | 'l' | 'gal' | 'lb';
+export type ProductUnits = 'pcs' | 'kg' | 'gr' | 't' | 'l' | 'gal' | 'lb';
 
 export default interface Product extends Document {
     name: string;
-    units: Units;
+    units: ProductUnits;
     type: string;
     price: number;
     currency: string; // ISO-4217

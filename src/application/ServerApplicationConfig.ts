@@ -1,3 +1,4 @@
+import { Algorithm } from 'jsonwebtoken';
 
 /**
  *
@@ -10,4 +11,5 @@ export default interface ServerApplicationConfig {
     dbUri: string;
     sessionPrivateKey: string;
     sessionExpirationTime: string;
+    sessionSingAlgorithm: Algorithm;
 }

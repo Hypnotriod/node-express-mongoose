@@ -5,7 +5,7 @@ module.exports = {
   target: 'node',
   mode: 'production',
   externals: {
-    'pg-native': 'pg-native'
+    'aws-sdk': 'aws-sdk'
   },
   entry: {
     app: './build/index.js',
@@ -14,7 +14,7 @@ module.exports = {
     new CleanWebpackPlugin(),
   ],
   output: {
-    filename: '[name].[hash].bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
 };

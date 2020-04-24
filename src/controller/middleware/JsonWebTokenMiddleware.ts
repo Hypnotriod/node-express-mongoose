@@ -7,8 +7,8 @@ import JsonWebTokenService from '../../service/JsonWebTokenService';
  * @author Ilya Pikin
  */
 
-export function getUuid(request: Request, response: Response, next: NextFunction): void {
+export async function getUuid(request: Request, response: Response, next: NextFunction): Promise<void> {
     const jsonWebTokenService: JsonWebTokenService = container.resolve(JsonWebTokenService);
-    request.body.uuid = jsonWebTokenService.verify(request.headers.authorization);
+    request.body.uuid = await jsonWebTokenService.verify(request.headers.authorization);
     next();
 }

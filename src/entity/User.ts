@@ -5,7 +5,11 @@ import { Document } from 'mongoose';
  * @author Ilya Pikin
  */
 
-export type UserRole = 'admin' | 'seller' | 'storekeeper';
+export enum UserRole {
+    ADMIN = 'admin',
+    SELLER = 'seller',
+    STOREKEEPER = 'storekeeper'
+}
 
 export default interface User extends Document {
     login: string;

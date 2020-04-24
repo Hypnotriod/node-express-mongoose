@@ -4,7 +4,7 @@ import { container, injectable, singleton, inject } from 'tsyringe';
 import { Logger } from '@overnightjs/logger';
 import mongoose from 'mongoose';
 import http from 'http';
-import { getCorsHeaders } from '../controller/middleware/CORSMiddleware';
+import { getCorsHeaders } from '../controller/middleware/CorsMiddleware';
 import ServerApplicationConfig from './ServerApplicationConfig';
 import FaviconController from '../controller/FaviconController';
 import ProductsController from '../controller/ProductsController';

@@ -121,7 +121,7 @@
       "allow-leading-underscore"
     ],
     "whitespace": [
-      false,
+      true,
       "check-branch",
       "check-decl",
       "check-operator",

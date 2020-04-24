@@ -16,15 +16,10 @@ export default class LoginController {
     constructor(private readonly userService: UserService) { }
 
     @Post()
-    @Middleware(getUuid)
     private async login(request: Request, response: Response): Promise<void> {
-        if (request.body.uuid) {
-            response.send('Is already logged in!');
-        } else {
-            const token: string = await this.userService.login(
-                request.body.login,
-                request.body.password);
-            response.json(token);
-        }
+        const token: string | null = await this.userService.login(
+            request.body.login,
+            request.body.password);
+        response.json(token);
     }
 }

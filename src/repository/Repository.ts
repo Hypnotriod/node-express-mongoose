@@ -24,8 +24,10 @@ export default class Repository<T extends Document> {
     public async saveAll(datas: T[] | any[]): Promise<T[]> {
         const result: T[] = [];
         for (let data of datas) {
-            const entity: T = await this.save(data);
-            result.push(entity);
+            const entity: T | null = await this.save(data);
+            if (entity) {
+                result.push(entity);
+            }
         }
         return result;
     }

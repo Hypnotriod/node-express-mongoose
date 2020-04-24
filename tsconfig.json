@@ -6,7 +6,8 @@
         "target": "ESNext",
         "esModuleInterop": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "strictNullChecks": true
     },
     "include": [
         "src/**/*.ts"

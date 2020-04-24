@@ -4,7 +4,6 @@ import { Algorithm } from 'jsonwebtoken';
 import ServerApplication from './application/ServerApplication';
 import ServerApplicationConfig from './application/ServerApplicationConfig';
 
-
 /**
  *
  * @author Ilya Pikin

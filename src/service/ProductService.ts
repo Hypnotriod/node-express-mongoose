@@ -12,11 +12,11 @@ import ProductRepository from '../repository/ProductRepository';
 export default class ProductService {
     constructor(private readonly productRepository: ProductRepository) { }
 
-    public async save(data: any | Product): Promise<Product | null> {
+    public save(data: any | Product): Promise<Product | null> {
         return this.productRepository.save(data);
     }
 
-    public async findAll(): Promise<Product[]> {
+    public findAll(): Promise<Product[]> {
         return this.productRepository.findAll();
     }
 }

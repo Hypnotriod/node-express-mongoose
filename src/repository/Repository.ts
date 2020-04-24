@@ -30,6 +30,14 @@ export default class Repository<T extends Document> {
         return result;
     }
 
+    public async findOne(filter: object): Promise<T | null> {
+        return this.model.findOne(filter);
+    }
+
+    public async find(filter: object): Promise<T[]> {
+        return this.model.find(filter);
+    }
+
     public async findAll(): Promise<T[]> {
         return this.model.find();
     }

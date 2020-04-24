@@ -2,6 +2,8 @@
     "env": {
         "NODE_ENV": "production",
         "PORT": 3000,
-        "DB_URI": "mongodb://localhost:27017/test_shop"
+        "DB_URI": "mongodb://localhost:27017/test_shop",
+        "SESSION_PRIVATE_KEY": "fq5a1e611ae803aa018be3c6d011be47",
+        "SESSION_EXPIRATION_TIME": "10m"
     }
 }

@@ -1,6 +1,6 @@
 import * as bodyParser from 'body-parser';
 import { Server } from '@overnightjs/core';
-import { container } from 'tsyringe';
+import { container, injectable, singleton, inject } from 'tsyringe';
 import { Logger } from '@overnightjs/logger';
 import mongoose from 'mongoose';
 import http from 'http';
@@ -11,24 +11,26 @@ import AddNewProductController from '../controller/AddNewProductController';
 import AddNewDiscountController from '../controller/AddNewDiscountController';
 import GetAllDiscountsController from '../controller/GetAllDiscountsController';
 import AddNewUserController from '../controller/AddNewUserController';
+import LoginController from '../controller/LoginController';
 
 /**
  *
  * @author Ilya Pikin
  */
 
+@injectable()
+@singleton()
 export default class ServerApplication extends Server {
 
-    constructor(config: ServerApplicationConfig) {
-        super(config.production === false);
-        this.launch(config);
+    constructor(@inject('ServerApplicationConfig') private readonly config: ServerApplicationConfig) {
+        super(!config.production);
     }
 
-    private async launch(config: ServerApplicationConfig): Promise<void> {
+    public async launch(): Promise<void> {
         this.initializeRouterHandles();
-        await this.establishDBConnection(config);
+        await this.establishDBConnection();
         this.initControllers();
-        this.startServer(config);
+        this.startServer();
     }
 
     private initializeRouterHandles(): void {
@@ -36,14 +38,13 @@ export default class ServerApplication extends Server {
         this.app.use(bodyParser.urlencoded({ extended: true }));
     }
 
-    private async establishDBConnection(config: ServerApplicationConfig): Promise<void> {
+    private async establishDBConnection(): Promise<void> {
         try {
             await mongoose.connect(
-                config.dbUri,
-                {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                });
+                this.config.dbUri, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            });
         } catch (err) {
             Logger.Err('Unable to connect to the database.');
             Logger.Err(err, true);
@@ -59,10 +60,11 @@ export default class ServerApplication extends Server {
             container.resolve(AddNewProductController),
             container.resolve(AddNewDiscountController),
             container.resolve(AddNewUserController),
+            container.resolve(LoginController),
         ]);
     }
 
-    private startServer(config: ServerApplicationConfig): void {
-        http.createServer(this.app).listen(config.serverPort);
+    private startServer(): void {
+        http.createServer(this.app).listen(this.config.serverPort);
     }
 }

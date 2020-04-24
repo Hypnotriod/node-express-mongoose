@@ -10,5 +10,8 @@ Configured for `VSCode` IDE.
 * [overnightjs](https://www.npmjs.com/package/@overnightjs/core)
 * [overnightjs logger](https://www.npmjs.com/package/@overnightjs/logger)
 * [tsyringe](https://www.npmjs.com/package/tsyringe)
+* [password validator](https://www.npmjs.com/package/password-validator)
+* [bcrypt](https://www.npmjs.com/package/bcrypt)
+* [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 * [webpack production guide](https://webpack.js.org/guides/production/)
 * [typeScript compiler options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)

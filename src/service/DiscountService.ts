@@ -12,11 +12,11 @@ import Discount from '../entity/Discount';
 export default class DiscountService {
     constructor(private readonly discountRepository: DiscountRepository) { }
 
-    public async save(data: any | Discount): Promise<Discount | null> {
+    public save(data: any | Discount): Promise<Discount | null> {
         return this.discountRepository.save(data);
     }
 
-    public async findAll(): Promise<Discount[]> {
+    public findAll(): Promise<Discount[]> {
         return this.discountRepository.findAll();
     }
 }

@@ -11,4 +11,6 @@ export default interface User extends Document {
     login: string;
     password: string;
     role: UserRole;
+    isActive: boolean;
+    description?: string;
 }

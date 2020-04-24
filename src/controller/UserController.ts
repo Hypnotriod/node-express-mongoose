@@ -3,7 +3,7 @@ import { Controller, Post, Middleware } from '@overnightjs/core';
 import { injectable, singleton } from 'tsyringe';
 import UserService from '../service/UserService';
 import User from '../entity/User';
-import { getUuid } from './middleware/JsonWebTokenMiddleware';
+import { getJsonWebToken } from './middleware/JsonWebTokenMiddleware';
 
 /**
  *
@@ -17,9 +17,9 @@ export default class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Post('add')
-    @Middleware(getUuid)
+    @Middleware(getJsonWebToken)
     private async addNewUser(request: Request, response: Response): Promise<void> {
-        const user: User = await this.userService.addNew(request.body.uuid, request.body);
+        const user: User | null = await this.userService.addNew(response.locals.jsonWebToken, request.body);
         response.json(user);
     }
 }

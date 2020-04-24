@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { Controller, Post, Middleware } from '@overnightjs/core';
 import { injectable, singleton } from 'tsyringe';
-import { getUuid } from './middleware/JsonWebTokenMiddleware';
 import UserService from '../service/UserService';
 
 /**

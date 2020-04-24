@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { Controller, Get, Post } from '@overnightjs/core';
+import { Controller, Get, Post, Middleware } from '@overnightjs/core';
 import { injectable, singleton } from 'tsyringe';
 import ProductService from '../service/ProductService';
 import Product from '../entity/Product';
+import { getJsonWebToken } from './middleware/JsonWebTokenMiddleware';
 
 /**
  *
@@ -22,8 +23,9 @@ export default class ProductsController {
     }
 
     @Post('add')
+    @Middleware(getJsonWebToken)
     private async addNewProduct(request: Request, response: Response): Promise<void> {
-        const product: Product = await this.productService.save(request.body);
+        const product: Product | null = await this.productService.save(response.locals.jsonWebToken, request.body);
         response.json(product);
     }
 }

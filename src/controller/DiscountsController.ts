@@ -23,7 +23,7 @@ export default class DiscountsController {
 
     @Post('add')
     private async addNewDiscount(request: Request, response: Response): Promise<void> {
-        const discount: Discount = await this.discountService.save(request.body);
+        const discount: Discount | null = await this.discountService.save(request.body);
         response.json(discount);
     }
 }

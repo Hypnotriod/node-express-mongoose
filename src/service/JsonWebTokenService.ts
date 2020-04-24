@@ -11,7 +11,7 @@ import User, { UserRole } from '../entity/User';
 
 export type JsonWebToken = {
     uuid: string;
-    role: UserRole;
+    userRole: UserRole;
 };
 
 @injectable()
@@ -23,7 +23,7 @@ export default class JsonWebTokenService {
         return new Promise<string | null>((resolve, reject) => {
             const jsonWebToken: JsonWebToken = {
                 uuid: user.id,
-                role: user.role
+                userRole: user.role
             };
             jwt.sign(jsonWebToken,
                 this.config.sessionPrivateKey, {

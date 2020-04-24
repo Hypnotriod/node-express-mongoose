@@ -4,13 +4,12 @@ import { container, injectable, singleton, inject } from 'tsyringe';
 import { Logger } from '@overnightjs/logger';
 import mongoose from 'mongoose';
 import http from 'http';
+import { getCorsHeaders } from '../controller/middleware/CORSMiddleware';
 import ServerApplicationConfig from './ServerApplicationConfig';
 import FaviconController from '../controller/FaviconController';
-import GetAllProductsController from '../controller/GetAllProductsController';
-import AddNewProductController from '../controller/AddNewProductController';
-import AddNewDiscountController from '../controller/AddNewDiscountController';
-import GetAllDiscountsController from '../controller/GetAllDiscountsController';
-import AddNewUserController from '../controller/AddNewUserController';
+import ProductsController from '../controller/ProductsController';
+import DiscountsController from '../controller/DiscountsController';
+import UserController from '../controller/UserController';
 import LoginController from '../controller/LoginController';
 
 /**
@@ -36,12 +35,14 @@ export default class ServerApplication extends Server {
     private initializeRouterHandles(): void {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(getCorsHeaders);
     }
 
     private async establishDBConnection(): Promise<void> {
         try {
             await mongoose.connect(
                 this.config.dbUri, {
+                useCreateIndex: true,
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
@@ -55,11 +56,9 @@ export default class ServerApplication extends Server {
     private initControllers(): void {
         super.addControllers([
             container.resolve(FaviconController),
-            container.resolve(GetAllProductsController),
-            container.resolve(GetAllDiscountsController),
-            container.resolve(AddNewProductController),
-            container.resolve(AddNewDiscountController),
-            container.resolve(AddNewUserController),
+            container.resolve(ProductsController),
+            container.resolve(DiscountsController),
+            container.resolve(UserController),
             container.resolve(LoginController),
         ]);
     }

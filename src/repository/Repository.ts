@@ -15,7 +15,7 @@ export default class Repository<T extends Document> {
             await entity.validate();
             return await entity.save();
         } catch (err) {
-            Logger.Err(`Unable to save ${this.model.modelName} with data: ${JSON.stringify(data)}`);
+            Logger.Err(`Unable to save ${this.model.modelName}: ${JSON.stringify(data)}`);
             Logger.Err(err);
         }
         return null;

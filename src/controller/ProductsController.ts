@@ -4,6 +4,7 @@ import { injectable, singleton } from 'tsyringe';
 import ProductService from '../service/ProductService';
 import Product from '../entity/Product';
 import { getJsonWebToken } from './middleware/JsonWebTokenMiddleware';
+import ServerResponseResult from '../dto/ServerResponseResult';
 
 /**
  *
@@ -25,7 +26,7 @@ export default class ProductsController {
     @Post('add')
     @Middleware(getJsonWebToken)
     private async addNewProduct(request: Request, response: Response): Promise<void> {
-        const product: Product | null = await this.productService.save(response.locals.jsonWebToken, request.body);
-        response.json(product);
+        const result: ServerResponseResult = await this.productService.addNewProduct(response.locals.jsonWebToken, request.body);
+        response.status(result.httpStatusCode).json(result);
     }
 }

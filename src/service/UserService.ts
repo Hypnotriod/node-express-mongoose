@@ -1,8 +1,14 @@
 import { singleton, injectable } from 'tsyringe';
-import User, { UserRole } from '../entity/User';
 import UserRepository from '../repository/UserRepository';
+import User, { UserRole } from '../entity/User';
 import PasswordService from './PasswordService';
 import JsonWebTokenService, { JsonWebToken } from './JsonWebTokenService';
+import AuthorizationResult from '../dto/AuthorizationResult';
+import HttpStatusCode from '../constants/HttpStatusCode';
+import RefreshTokenService from './RefreshTokenService';
+import RefreshToken from '../entity/RefreshToken';
+import SeverErrorDescription from '../constants/ServerErrorDescription';
+import ServerResponseResult from '../dto/ServerResponseResult';
 
 /**
  *
@@ -15,20 +21,40 @@ export default class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly passwordService: PasswordService,
-        private readonly jsonWebTokenService: JsonWebTokenService) { }
+        private readonly jsonWebTokenService: JsonWebTokenService,
+        private readonly refreshTokenService: RefreshTokenService) { }
 
-    public async login(login: string, password: string): Promise<string | null> {
+    public async login(login: string, password: string): Promise<AuthorizationResult> {
         const user: User | null = await this.userRepository.findByLogin(login);
         if (user && await this.passwordService.compare(password, user.password)) {
-            return await this.jsonWebTokenService.sign(user);
+            const authenticationToken: string | null = await this.jsonWebTokenService.sign(user);
+            const refreshToken: RefreshToken | null = await this.refreshTokenService.createNewToken(user);
+            if (authenticationToken && refreshToken) {
+                return {
+                    httpStatusCode: HttpStatusCode.OK,
+                    authenticationToken,
+                    refreshToken: refreshToken.token
+                };
+            }
         }
-        return null;
+        return {
+            httpStatusCode: HttpStatusCode.FORBIDDEN,
+            errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS
+        };
     }
 
-    public async addNew(jsonWebToken: JsonWebToken, data: any | User): Promise<User | null> {
-        if (!jsonWebToken) { return null; }
-        if (!this.checkRole(jsonWebToken.userRole, UserRole.ADMIN)) { return null; }
-        return this.save(data);
+    public async addNewUser(jsonWebToken: JsonWebToken, data: any | User): Promise<ServerResponseResult> {
+        if (!jsonWebToken ||
+            !this.checkRole(jsonWebToken.userRole, UserRole.ADMIN) ||
+            !this.save(data)) {
+            return {
+                httpStatusCode: HttpStatusCode.FORBIDDEN,
+                errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS
+            };
+        }
+        return {
+            httpStatusCode: HttpStatusCode.OK
+        };
     }
 
     public async save(data: any | User): Promise<User | null> {

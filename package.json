@@ -25,7 +25,8 @@
     "mongoose": "^5.9.10",
     "password-validator": "^5.0.3",
     "reflect-metadata": "^0.1.13",
-    "tsyringe": "^4.1.0"
+    "tsyringe": "^4.1.0",
+    "uuidv4": "^6.0.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

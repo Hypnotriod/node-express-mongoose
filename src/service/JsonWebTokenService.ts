@@ -12,6 +12,8 @@ import User, { UserRole } from '../entity/User';
 export type JsonWebToken = {
     uuid: string;
     userRole: UserRole;
+    exp?: number;
+    iat?: number;
 };
 
 @injectable()
@@ -52,5 +54,9 @@ export default class JsonWebTokenService {
                     }
                 });
         });
+    }
+
+    public decode(token: string): JsonWebToken | null {
+        return jwt.decode(token) as JsonWebToken | null;
     }
 }

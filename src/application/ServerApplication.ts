@@ -10,7 +10,7 @@ import FaviconController from '../controller/FaviconController';
 import ProductsController from '../controller/ProductsController';
 import DiscountsController from '../controller/DiscountsController';
 import UserController from '../controller/UserController';
-import LoginController from '../controller/LoginController';
+import AuthController from '../controller/AuthController';
 
 /**
  *
@@ -59,7 +59,7 @@ export default class ServerApplication extends Server {
             container.resolve(ProductsController),
             container.resolve(DiscountsController),
             container.resolve(UserController),
-            container.resolve(LoginController),
+            container.resolve(AuthController),
         ]);
     }
 

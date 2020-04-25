@@ -4,6 +4,7 @@ import { injectable, singleton } from 'tsyringe';
 import UserService from '../service/UserService';
 import User from '../entity/User';
 import { getJsonWebToken } from './middleware/JsonWebTokenMiddleware';
+import ServerResponseResult from '../dto/ServerResponseResult';
 
 /**
  *
@@ -19,7 +20,7 @@ export default class UserController {
     @Post('add')
     @Middleware(getJsonWebToken)
     private async addNewUser(request: Request, response: Response): Promise<void> {
-        const user: User | null = await this.userService.addNew(response.locals.jsonWebToken, request.body);
-        response.json(user);
+        const result: ServerResponseResult = await this.userService.addNewUser(response.locals.jsonWebToken, request.body);
+        response.status(result.httpStatusCode).json(result);
     }
 }

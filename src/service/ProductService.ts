@@ -27,7 +27,7 @@ export default class ProductService {
             return {
                 httpStatusCode: HttpStatusCode.FORBIDDEN,
                 errorDescription: ServerErrorDescription.HAVE_NO_PERMISSION,
-                authorizationGranted: false
+                authorizationGranted: jsonWebToken != null
             };
         }
         if (!await this.productRepository.save(data)) {

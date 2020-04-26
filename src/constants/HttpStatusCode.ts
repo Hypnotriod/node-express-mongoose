@@ -1,4 +1,6 @@
 /**
+ * @author Soner Çökmen
+ * {@link https://gist.github.com/scokmen/f813c904ef79022e84ab2409574d1b45}
  * Hypertext Transfer Protocol (HTTP) response status codes.
  * @see {@link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes}
  */

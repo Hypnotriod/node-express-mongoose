@@ -17,7 +17,7 @@ export default class AuthController {
 
     @Post('login')
     private async login(request: Request, response: Response): Promise<void> {
-        const result: AuthorizationResult | null = await this.userService.login(
+        const result: AuthorizationResult = await this.userService.login(
             request.body.login,
             request.body.password);
         response.status(result.httpStatusCode).json(result);

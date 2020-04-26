@@ -1,5 +1,5 @@
-import { Document } from 'mongoose';
 import Discount from './Discount';
+import Entity from './Entity';
 
 /**
  *
@@ -8,7 +8,7 @@ import Discount from './Discount';
 
 export type ProductUnits = 'pcs' | 'kg' | 'gr' | 't' | 'l' | 'gal' | 'lb';
 
-export default interface Product extends Document {
+export default interface Product extends Entity {
     name: string;
     units: ProductUnits;
     type: string;

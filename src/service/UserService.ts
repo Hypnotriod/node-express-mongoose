@@ -32,6 +32,7 @@ export default class UserService {
             if (authenticationToken && refreshToken) {
                 return {
                     httpStatusCode: HttpStatusCode.OK,
+                    authorizationGranted: true,
                     authenticationToken,
                     refreshToken: refreshToken.token
                 };
@@ -39,7 +40,8 @@ export default class UserService {
         }
         return {
             httpStatusCode: HttpStatusCode.FORBIDDEN,
-            errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS
+            errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS,
+            authorizationGranted: false
         };
     }
 
@@ -49,11 +51,13 @@ export default class UserService {
             !this.save(data)) {
             return {
                 httpStatusCode: HttpStatusCode.FORBIDDEN,
-                errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS
+                errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS,
+                authorizationGranted: jsonWebToken != null
             };
         }
         return {
-            httpStatusCode: HttpStatusCode.OK
+            httpStatusCode: HttpStatusCode.OK,
+            authorizationGranted: true
         };
     }
 

@@ -1,11 +1,11 @@
-import { Document } from 'mongoose';
+import Entity from './Entity';
 
 /**
  *
  * @author Ilya Pikin
  */
 
-export default class RefreshToken extends Document {
+export default interface RefreshToken extends Entity {
     userId: string;
     token: string;
 }

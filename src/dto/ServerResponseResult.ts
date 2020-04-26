@@ -9,6 +9,7 @@ import ServerOperationErrorCode from '../constants/ServerOperationErrorCode';
 
 export default interface ServerResponseResult {
     httpStatusCode: HttpStatusCode;
+    authorizationGranted: boolean;
     operationErrorCode?: ServerOperationErrorCode;
     errorDescription?: SeverErrorDescription;
 }

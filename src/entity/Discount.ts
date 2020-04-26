@@ -1,13 +1,15 @@
-import mongoose, { Document } from 'mongoose';
 import DiscountRule from './DiscountRule';
+import Entity from './Entity';
 
 /**
  *
  * @author Ilya Pikin
  */
 
-export default interface Discount extends Document {
+export default interface Discount extends Entity {
     discount: number;
     isActive: boolean;
     rule: DiscountRule;
+    createdAt?: string;
+    updatedAt?: string;
 }

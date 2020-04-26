@@ -2,13 +2,9 @@ import { singleton, injectable } from 'tsyringe';
 import UserRepository from '../repository/UserRepository';
 import User, { UserRole } from '../entity/User';
 import PasswordService from './PasswordService';
-import JsonWebTokenService, { JsonWebToken } from './JsonWebTokenService';
-import AuthorizationResult from '../dto/AuthorizationResult';
-import HttpStatusCode from '../constants/HttpStatusCode';
-import RefreshTokenService from './RefreshTokenService';
-import RefreshToken from '../entity/RefreshToken';
-import SeverErrorDescription from '../constants/ServerErrorDescription';
+import { JsonWebToken } from './JsonWebTokenService';
 import ServerResponseResult from '../dto/ServerResponseResult';
+import ServerResponseService from './ServerResponseService';
 
 /**
  *
@@ -21,44 +17,15 @@ export default class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly passwordService: PasswordService,
-        private readonly jsonWebTokenService: JsonWebTokenService,
-        private readonly refreshTokenService: RefreshTokenService) { }
+        private readonly serverResponseService: ServerResponseService) { }
 
-    public async login(login: string, password: string): Promise<AuthorizationResult> {
-        const user: User | null = await this.userRepository.findByLogin(login);
-        if (user && await this.passwordService.compare(password, user.password)) {
-            const authenticationToken: string | null = await this.jsonWebTokenService.sign(user);
-            const refreshToken: RefreshToken | null = await this.refreshTokenService.createNewToken(user);
-            if (authenticationToken && refreshToken) {
-                return {
-                    httpStatusCode: HttpStatusCode.OK,
-                    authorizationGranted: true,
-                    authenticationToken,
-                    refreshToken: refreshToken.token
-                };
-            }
-        }
-        return {
-            httpStatusCode: HttpStatusCode.FORBIDDEN,
-            errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS,
-            authorizationGranted: false
-        };
-    }
-
-    public async addNewUser(jsonWebToken: JsonWebToken, data: any | User): Promise<ServerResponseResult> {
+    public async addNewUser(jsonWebToken: JsonWebToken | undefined, data: any | User): Promise<ServerResponseResult> {
         if (!jsonWebToken ||
             !this.checkRole(jsonWebToken.userRole, UserRole.ADMIN) ||
             !this.save(data)) {
-            return {
-                httpStatusCode: HttpStatusCode.FORBIDDEN,
-                errorDescription: SeverErrorDescription.FORBIDDEN_TO_ACCESS,
-                authorizationGranted: jsonWebToken != null
-            };
+            return this.serverResponseService.generateNoPermission(jsonWebToken !== undefined);
         }
-        return {
-            httpStatusCode: HttpStatusCode.OK,
-            authorizationGranted: true
-        };
+        return this.serverResponseService.generateOk();
     }
 
     public async save(data: any | User): Promise<User | null> {
@@ -88,5 +55,13 @@ export default class UserService {
 
     public findAll(): Promise<User[]> {
         return this.userRepository.findAll();
+    }
+
+    public findByLogin(login: string): Promise<User | null> {
+        return this.userRepository.findByLogin(login);
+    }
+
+    public findById(userId: string): Promise<User | null> {
+        return this.userRepository.findById(userId);
     }
 }

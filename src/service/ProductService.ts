@@ -5,10 +5,7 @@ import Product from '../entity/Product';
 import ProductRepository from '../repository/ProductRepository';
 import UserService from './UserService';
 import ServerResponseResult from '../dto/ServerResponseResult';
-import HttpStatusCode from '../constants/HttpStatusCode';
-import ServerErrorDescription from '../constants/ServerErrorDescription';
-import ServerOperationErrorCode from '../constants/ServerOperationErrorCode';
-import ProductsRequestResult from '../dto/ProductsRequestResult';
+import ServerResponseService from './ServerResponseService';
 
 /**
  *
@@ -20,33 +17,22 @@ import ProductsRequestResult from '../dto/ProductsRequestResult';
 export default class ProductService {
     constructor(
         private readonly productRepository: ProductRepository,
-        private readonly userService: UserService) { }
+        private readonly userService: UserService,
+        private readonly serverResponseService: ServerResponseService) { }
 
-    public async addNewProduct(jsonWebToken: JsonWebToken | null, data: any | Product): Promise<ServerResponseResult> {
+    public async addNewProduct(jsonWebToken: JsonWebToken | undefined, data: any | Product): Promise<ServerResponseResult> {
         if (!jsonWebToken || !this.userService.checkRole(jsonWebToken.userRole, UserRole.STOREKEEPER)) {
-            return {
-                httpStatusCode: HttpStatusCode.FORBIDDEN,
-                errorDescription: ServerErrorDescription.HAVE_NO_PERMISSION,
-                authorizationGranted: jsonWebToken != null
-            };
+            return this.serverResponseService.generateNoPermission(jsonWebToken !== undefined);
         }
         if (!await this.productRepository.save(data)) {
-            return {
-                httpStatusCode: HttpStatusCode.OK,
-                authorizationGranted: true
-            };
+            return this.serverResponseService.generateOk();
         } else {
-            return {
-                httpStatusCode: HttpStatusCode.OK,
-                operationErrorCode: ServerOperationErrorCode.MALFORMED,
-                errorDescription: ServerErrorDescription.MALFORMED,
-                authorizationGranted: true
-            };
+            return this.serverResponseService.generateMalformed();
         }
     }
 
-    public async getAllProducts(jsonWebToken: JsonWebToken | null): Promise<ProductsRequestResult> {
-        const isStorekeeper: boolean = (jsonWebToken != null && jsonWebToken.userRole === UserRole.STOREKEEPER);
+    public async getAllProducts(jsonWebToken: JsonWebToken | undefined): Promise<ServerResponseResult> {
+        const isStorekeeper: boolean = (jsonWebToken !== undefined && jsonWebToken.userRole === UserRole.STOREKEEPER);
         let products: Product[] = await this.productRepository.findAll();
         let reducedProducts: object[];
 
@@ -55,11 +41,7 @@ export default class ProductService {
             : products.filter(product => !product.isHidden)
                 .map(this.mapToReducedProductInfo.bind(this));
 
-        return {
-            httpStatusCode: HttpStatusCode.OK,
-            authorizationGranted: jsonWebToken != null,
-            products: reducedProducts,
-        };
+        return this.serverResponseService.generateOkWithData(jsonWebToken !== undefined, reducedProducts);
     }
 
     private mapToFullProductInfo(product: Product): object {

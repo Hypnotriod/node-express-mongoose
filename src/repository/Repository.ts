@@ -77,4 +77,14 @@ export default class Repository<T extends Document> {
         }
         return null;
     }
+
+    public async deleteMany(filter: object): Promise<{ deletedCount?: number } | null> {
+        try {
+            return await this.model.deleteMany(filter);
+        } catch (err) {
+            Logger.Err(`Unable to delete ${this.model.modelName}`);
+            Logger.Err(err);
+        }
+        return null;
+    }
 }

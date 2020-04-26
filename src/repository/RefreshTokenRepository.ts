@@ -17,4 +17,12 @@ export default class RefreshTokenRepository extends Repository<RefreshToken> {
     public findByToken(token: string): Promise<RefreshToken | null> {
         return this.findOne({ token });
     }
+
+    public findAllByUserId(userId: string): Promise<RefreshToken[]> {
+        return this.find({ userId });
+    }
+
+    public deleteAllByUserId(userId: string): Promise<{ deletedCount?: number } | null> {
+        return this.deleteMany({ userId });
+    }
 }

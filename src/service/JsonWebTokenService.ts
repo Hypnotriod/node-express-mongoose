@@ -10,7 +10,7 @@ import User, { UserRole } from '../entity/User';
  */
 
 export type JsonWebToken = {
-    uuid: string;
+    userId: string;
     userRole: UserRole;
     exp?: number;
     iat?: number;
@@ -24,7 +24,7 @@ export default class JsonWebTokenService {
     public sign(user: User): Promise<string | null> {
         return new Promise<string | null>((resolve, reject) => {
             const jsonWebToken: JsonWebToken = {
-                uuid: user.id,
+                userId: user.id,
                 userRole: user.role
             };
             jwt.sign(jsonWebToken,

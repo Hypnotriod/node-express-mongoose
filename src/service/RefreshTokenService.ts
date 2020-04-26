@@ -14,13 +14,25 @@ import RefreshToken from '../entity/RefreshToken';
 export default class RefreshTokenService {
     constructor(private readonly refreshTokenRepository: RefreshTokenRepository) { }
 
-    public async createNewToken(user: User): Promise<RefreshToken | null> {
+    public createNewToken(user: User): Promise<RefreshToken | null> {
         return this.refreshTokenRepository.save({
             userId: user.id, token: uuid()
         });
     }
 
-    public async delete(refreshToken: RefreshToken): Promise<RefreshToken | null> {
+    public findByToken(token: string): Promise<RefreshToken | null> {
+        return this.refreshTokenRepository.findByToken(token);
+    }
+
+    public findAllByUserId(userId: string): Promise<RefreshToken[]> {
+        return this.refreshTokenRepository.findAllByUserId(userId);
+    }
+
+    public deleteAllByUserId(userId: string): Promise<{ deletedCount?: number } | null> {
+        return this.refreshTokenRepository.deleteAllByUserId(userId);
+    }
+
+    public delete(refreshToken: RefreshToken): Promise<RefreshToken | null> {
         return this.refreshTokenRepository.delete(refreshToken);
     }
 }

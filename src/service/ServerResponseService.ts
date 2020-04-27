@@ -41,7 +41,7 @@ export default class ServerResponseService {
 
     public generateMalformed(authorizationGranted: boolean = true): ServerResponseResult {
         return {
-            httpStatusCode: HttpStatusCode.OK,
+            httpStatusCode: HttpStatusCode.PARTIAL_CONTENT,
             operationErrorCode: ServerOperationErrorCode.MALFORMED,
             errorDescription: SeverErrorDescription.MALFORMED,
             authorizationGranted

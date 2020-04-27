@@ -21,15 +21,24 @@ import UserAuthController from '../controller/UserAuthController';
 @singleton()
 export default class ServerApplication extends Server {
 
+    private server: http.Server;
+
     constructor(@inject('ServerApplicationConfig') private readonly config: ServerApplicationConfig) {
         super(!config.production);
     }
 
-    public async launch(): Promise<void> {
+    public async launch(): Promise<ServerApplication> {
         this.initializeRouterHandles();
         await this.establishDBConnection();
         this.initControllers();
         this.startServer();
+
+        return this;
+    }
+
+    public async terminate(): Promise<void> {
+        await mongoose.connection.close();
+        if (this.server) { this.server.close(); }
     }
 
     private initializeRouterHandles(): void {
@@ -64,6 +73,12 @@ export default class ServerApplication extends Server {
     }
 
     private startServer(): void {
-        http.createServer(this.app).listen(this.config.serverPort);
+        try {
+            this.server = http.createServer(this.app).listen(this.config.serverPort);
+        } catch (err) {
+            Logger.Err('Unable to create server.');
+            Logger.Err(err);
+            throw err;
+        }
     }
 }

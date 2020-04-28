@@ -9,17 +9,17 @@ import RefreshToken from '../entity/RefreshToken';
 const schema: Schema = new Schema({
     userId: {
         type: String,
-        required: true
+        required: true,
     },
     token: {
         type: String,
-        required: true
+        required: true,
     },
 }, {
     timestamps: {
         createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
-    }
+        updatedAt: 'updatedAt',
+    },
 });
 
 export default mongoose.model<RefreshToken>('refresh_token', schema);

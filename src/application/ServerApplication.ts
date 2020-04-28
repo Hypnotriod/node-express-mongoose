@@ -36,9 +36,31 @@ export default class ServerApplication extends Server {
         return this;
     }
 
+    public async launchTest(establishDBConnection: boolean = true, startServer: boolean = false): Promise<ServerApplication> {
+        this.initializeRouterHandles();
+        if (establishDBConnection) {
+            await this.establishDBConnection();
+        }
+        this.initControllers();
+        if (startServer) {
+            this.startServer();
+        }
+
+        return this;
+    }
+
     public async terminate(): Promise<void> {
-        await mongoose.connection.close();
-        if (this.server) { this.server.close(); }
+        try {
+            await mongoose.connection.close();
+        } catch (err) {
+            Logger.Err(err);
+        }
+
+        try {
+            if (this.server) { this.server.close(); }
+        } catch (err) {
+            Logger.Err(err);
+        }
     }
 
     private initializeRouterHandles(): void {

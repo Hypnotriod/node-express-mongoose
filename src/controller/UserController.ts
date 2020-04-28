@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { Controller, Post, Middleware } from '@overnightjs/core';
 import { injectable, singleton } from 'tsyringe';
 import UserService from '../service/UserService';
-import User from '../entity/User';
 import { getJsonWebToken } from './middleware/JsonWebTokenMiddleware';
 import ServerResponseResult from '../dto/ServerResponseResult';
 

@@ -8,7 +8,7 @@ import { Document } from 'mongoose';
 export enum UserRole {
     ADMIN = 'admin',
     SELLER = 'seller',
-    STOREKEEPER = 'storekeeper'
+    STOREKEEPER = 'storekeeper',
 }
 
 export default interface User extends Document {

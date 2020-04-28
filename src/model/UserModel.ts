@@ -15,34 +15,34 @@ const schema: Schema = new Schema({
         lowercase: true,
         minlength: 3,
         maxlength: 20,
-        match: RegExp('^([a-z]+[a-z0-9]+\.?[a-z0-9]+)$')
+        match: RegExp('^([a-z]+[a-z0-9]+\.?[a-z0-9]+)$'),
     },
     password: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
     },
     role: {
         type: String,
         required: true,
         trim: true,
-        match: RegExp('admin|seller|storekeeper')
+        match: RegExp('admin|seller|storekeeper'),
     },
     isActive: {
         type: Boolean,
-        required: true
+        required: true,
     },
     description: {
         type: String,
         required: false,
         trim: true,
-        minlength: 3
+        minlength: 3,
     },
 }, {
     timestamps: {
         createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
-    }
+        updatedAt: 'updatedAt',
+    },
 });
 
 export default mongoose.model<User>('user', schema);

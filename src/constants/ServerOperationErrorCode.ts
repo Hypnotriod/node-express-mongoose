@@ -4,7 +4,7 @@
  */
 
 enum ServerOperationErrorCode {
-    MALFORMED = 1
+    MALFORMED = 1,
 }
 
 export default ServerOperationErrorCode;

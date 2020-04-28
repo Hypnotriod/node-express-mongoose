@@ -51,7 +51,7 @@ export default class ProductService {
             isHidden: product.isHidden,
             version: product.__v,
             createdAt: product.createdAt,
-            updatedAt: product.updatedAt
+            updatedAt: product.updatedAt,
         };
     }
 
@@ -66,7 +66,7 @@ export default class ProductService {
             inStockQuantity: product.inStockQuantity,
             isFractional: product.isFractional,
             description: product.description,
-            discounts: product.discounts
+            discounts: product.discounts,
         };
     }
 }

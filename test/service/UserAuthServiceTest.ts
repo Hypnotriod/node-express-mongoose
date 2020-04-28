@@ -1,15 +1,13 @@
-import setupEnvironment from '../SetupEnvironment';
-import ServerApplication from '../../src/application/ServerApplication';
-import setupDatabase from '../SetupDatabase';
-import UserAuthService from '../../src/service/UserAuthService';
+import 'reflect-metadata';
 import AuthorizationResult from '../../src/dto/AuthorizationResult';
 import {
     USER_LOGIN_ADMIN,
     USER_PASS_ADMIN,
     USER_LOGIN_INVALID,
-    USER_PASS_INVALID
-} from '../constants/Constants';
+    USER_PASS_INVALID,
+} from './UserAuthTestEnvironment';
 import HttpStatusCode from '../../src/constants/HttpStatusCode';
+import UserAuthService from '../../src/service/UserAuthService';
 import { container } from 'tsyringe';
 
 /**
@@ -17,23 +15,12 @@ import { container } from 'tsyringe';
  * @author Ilya Pikin
  */
 
-let serverApplication: ServerApplication;
 let userAuthService: UserAuthService;
-
-beforeAll(async done => {
-    serverApplication = await setupEnvironment();
-    await setupDatabase();
+beforeEach(() => {
     userAuthService = container.resolve(UserAuthService);
-    done();
 });
 
-afterAll(async done => {
-    await serverApplication.terminate();
-    done();
-});
-
-describe('User authorization & authentication', () => {
-
+export default function authTests(): void {
     test('User should get authentication and refresh tokens on login, with valid creadentials', async done => {
         const result: AuthorizationResult = await userAuthService.login(USER_LOGIN_ADMIN, USER_PASS_ADMIN);
         expect(result.httpStatusCode).toBe(HttpStatusCode.OK);
@@ -78,4 +65,4 @@ describe('User authorization & authentication', () => {
         expect(result.refreshToken).toBeUndefined();
         done();
     });
-});
+}

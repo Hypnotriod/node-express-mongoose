@@ -16,7 +16,8 @@ export default class RefreshTokenService {
 
     public createNewToken(user: User): Promise<RefreshToken | null> {
         return this.refreshTokenRepository.save({
-            userId: user.id, token: uuid()
+            userId: user.id,
+            token: uuid(),
         });
     }
 

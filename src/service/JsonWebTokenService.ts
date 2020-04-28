@@ -25,12 +25,12 @@ export default class JsonWebTokenService {
         return new Promise<string | null>((resolve, reject) => {
             const jsonWebToken: JsonWebToken = {
                 userId: user.id,
-                userRole: user.role
+                userRole: user.role,
             };
             jwt.sign(jsonWebToken,
                 this.config.sessionPrivateKey, {
                 expiresIn: this.config.sessionExpirationTime,
-                algorithm: this.config.sessionSingAlgorithm
+                algorithm: this.config.sessionSingAlgorithm,
             }, (err: Error | null, encoded: string | undefined) => {
                 if (err) {
                     Logger.Err(err);

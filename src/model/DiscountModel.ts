@@ -12,11 +12,11 @@ const schema: Schema = new Schema({
         required: true,
         unique: true,
         trim: true,
-        minlength: 3
+        minlength: 3,
     },
     isActive: {
         type: Boolean,
-        required: true
+        required: true,
     },
     rule: {
         type: {
@@ -24,14 +24,14 @@ const schema: Schema = new Schema({
             required: true,
             unique: true,
             trim: true,
-            minlength: 3
+            minlength: 3,
         },
-    }
+    },
 }, {
     timestamps: {
         createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
-    }
+        updatedAt: 'updatedAt',
+    },
 });
 
 export default mongoose.model<Discount>('discount', schema);

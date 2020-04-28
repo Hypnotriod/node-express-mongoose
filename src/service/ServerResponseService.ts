@@ -18,7 +18,7 @@ export default class ServerResponseService {
     public generateOk(authorizationGranted: boolean = true): ServerResponseResult {
         return {
             httpStatusCode: HttpStatusCode.OK,
-            authorizationGranted
+            authorizationGranted,
         };
     }
 
@@ -26,7 +26,7 @@ export default class ServerResponseService {
         return {
             httpStatusCode: HttpStatusCode.OK,
             authorizationGranted,
-            data
+            data,
         };
     }
 
@@ -35,7 +35,7 @@ export default class ServerResponseService {
             httpStatusCode: HttpStatusCode.OK,
             authorizationGranted: true,
             authenticationToken,
-            refreshToken
+            refreshToken,
         };
     }
 
@@ -44,7 +44,7 @@ export default class ServerResponseService {
             httpStatusCode: HttpStatusCode.PARTIAL_CONTENT,
             operationErrorCode: ServerOperationErrorCode.MALFORMED,
             errorDescription: SeverErrorDescription.MALFORMED,
-            authorizationGranted
+            authorizationGranted,
         };
     }
 
@@ -52,7 +52,7 @@ export default class ServerResponseService {
         return {
             httpStatusCode: HttpStatusCode.FORBIDDEN,
             errorDescription: SeverErrorDescription.NO_PERMISSION,
-            authorizationGranted
+            authorizationGranted,
         };
     }
 
@@ -60,7 +60,7 @@ export default class ServerResponseService {
         return {
             httpStatusCode: HttpStatusCode.FORBIDDEN,
             errorDescription: SeverErrorDescription.FORBIDDEN,
-            authorizationGranted
+            authorizationGranted,
         };
     }
 }

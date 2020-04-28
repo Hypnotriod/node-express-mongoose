@@ -1,5 +1,4 @@
 import authTests from './UserAuthServiceTest';
-import UserAuthService from '../../src/service/UserAuthService';
 import UserAuthTestEnvironment from './UserAuthTestEnvironment';
 
 const userAuthTestEnvironment: UserAuthTestEnvironment = new UserAuthTestEnvironment();

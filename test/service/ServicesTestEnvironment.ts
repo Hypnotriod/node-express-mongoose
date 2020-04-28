@@ -15,7 +15,7 @@ export const USER_PASS_ADMIN: string = 'PassW@r2';
 export const USER_LOGIN_INVALID: string = 'admin2';
 export const USER_PASS_INVALID: string = 'PassW@r3';
 
-export default class UserAuthTestEnvironment {
+export default class ServicesTestEnvironment {
     private serverApplication: ServerApplication;
 
     public async setup(): Promise<void> {

@@ -5,7 +5,7 @@ import {
     USER_PASS_ADMIN,
     USER_LOGIN_INVALID,
     USER_PASS_INVALID,
-} from './UserAuthTestEnvironment';
+} from './ServicesTestEnvironment';
 import HttpStatusCode from '../../src/constants/HttpStatusCode';
 import UserAuthService from '../../src/service/UserAuthService';
 import { container } from 'tsyringe';

@@ -1,15 +1,20 @@
 import authTests from './UserAuthServiceTest';
-import UserAuthTestEnvironment from './UserAuthTestEnvironment';
+import ServicesTestEnvironment from './ServicesTestEnvironment';
 
-const userAuthTestEnvironment: UserAuthTestEnvironment = new UserAuthTestEnvironment();
+/**
+ *
+ * @author Ilya Pikin
+ */
+
+const servicesTestEnvironment: ServicesTestEnvironment = new ServicesTestEnvironment();
 
 beforeAll(async done => {
-    await userAuthTestEnvironment.setup();
+    await servicesTestEnvironment.setup();
     done();
 });
 
 afterAll(async done => {
-    await userAuthTestEnvironment.terminate();
+    await servicesTestEnvironment.terminate();
     done();
 });
 

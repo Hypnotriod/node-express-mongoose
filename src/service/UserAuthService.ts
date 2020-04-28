@@ -47,7 +47,7 @@ export default class UserAuthService {
         return this.serverResponseService.generateOk();
     }
 
-    public async refresh(providedRefreshToken: string): Promise<AuthorizationResult> {
+    public async refresh(providedRefreshToken: string | undefined): Promise<AuthorizationResult> {
         if (!providedRefreshToken) {
             return this.serverResponseService.generateForbidden(false);
         }

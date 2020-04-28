@@ -5,6 +5,7 @@ import PasswordService from './PasswordService';
 import { JsonWebToken } from './JsonWebTokenService';
 import ServerResponseResult from '../dto/ServerResponseResult';
 import ServerResponseService from './ServerResponseService';
+import AllowUserRoles from './decorator/AllowUserRoles';
 
 /**
  *
@@ -19,11 +20,10 @@ export default class UserService {
         private readonly passwordService: PasswordService,
         private readonly serverResponseService: ServerResponseService) { }
 
+    @AllowUserRoles([UserRole.ADMIN])
     public async addNewUser(jsonWebToken: JsonWebToken | undefined, data: any | User): Promise<ServerResponseResult> {
-        if (!jsonWebToken ||
-            !this.checkRole(jsonWebToken.userRole, UserRole.ADMIN) ||
-            !this.save(data)) {
-            return this.serverResponseService.generateNoPermission(jsonWebToken !== undefined);
+        if (!this.save(data)) {
+            return this.serverResponseService.generateMalformed(jsonWebToken !== undefined);
         }
         return this.serverResponseService.generateOk();
     }
@@ -39,18 +39,6 @@ export default class UserService {
 
         data.password = hashedPassword;
         return this.userRepository.save(data);
-    }
-
-    public checkRole(userRole: UserRole, ...permittedRoles: UserRole[]): boolean {
-        if (!userRole) { return false; }
-        return permittedRoles.includes(userRole);
-    }
-
-    public async checkRoleByUuid(uuid: string, ...permittedRoles: UserRole[]): Promise<boolean> {
-        if (!uuid) { return false; }
-        const user: User | null = await this.userRepository.findById(uuid);
-        if (!user) { return false; }
-        return permittedRoles.includes(user.role);
     }
 
     public findAll(): Promise<User[]> {

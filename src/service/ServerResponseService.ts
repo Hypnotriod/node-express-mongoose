@@ -48,14 +48,6 @@ export default class ServerResponseService {
         };
     }
 
-    public generateNoPermission(authorizationGranted: boolean): ServerResponseResult {
-        return {
-            httpStatusCode: HttpStatusCode.FORBIDDEN,
-            errorDescription: SeverErrorDescription.NO_PERMISSION,
-            authorizationGranted,
-        };
-    }
-
     public generateForbidden(authorizationGranted: boolean): ServerResponseResult {
         return {
             httpStatusCode: HttpStatusCode.FORBIDDEN,

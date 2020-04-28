@@ -6,6 +6,7 @@ import ProductRepository from '../repository/ProductRepository';
 import UserService from './UserService';
 import ServerResponseResult from '../dto/ServerResponseResult';
 import ServerResponseService from './ServerResponseService';
+import AllowUserRoles from './decorator/AllowUserRoles';
 
 /**
  *
@@ -17,13 +18,10 @@ import ServerResponseService from './ServerResponseService';
 export default class ProductService {
     constructor(
         private readonly productRepository: ProductRepository,
-        private readonly userService: UserService,
         private readonly serverResponseService: ServerResponseService) { }
 
+    @AllowUserRoles([UserRole.STOREKEEPER])
     public async addNewProduct(jsonWebToken: JsonWebToken | undefined, data: any | Product): Promise<ServerResponseResult> {
-        if (!jsonWebToken || !this.userService.checkRole(jsonWebToken.userRole, UserRole.STOREKEEPER)) {
-            return this.serverResponseService.generateNoPermission(jsonWebToken !== undefined);
-        }
         if (!await this.productRepository.save(data)) {
             return this.serverResponseService.generateOk();
         } else {

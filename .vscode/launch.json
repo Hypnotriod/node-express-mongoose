@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Node Debug",
+            "name": "Launch Debug",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "npm",
@@ -22,7 +22,7 @@
             "protocol": "inspector",
         },
         {
-            "name": "Jest",
+            "name": "Test Debug",
             "type": "node",
             "request": "launch",
             "program": "${workspaceFolder}/node_modules/.bin/jest",

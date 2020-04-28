@@ -4,6 +4,11 @@ import { JsonWebToken } from '../JsonWebTokenService';
 import { container } from 'tsyringe';
 import ServerResponseService from '../ServerResponseService';
 
+/**
+ *
+ * @author Ilya Pikin
+ */
+
 export default function AllowUserRoles(permittedRoles: UserRole[]): any {
     return (target: ServerResponseResult, key: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
         return {

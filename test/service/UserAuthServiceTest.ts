@@ -12,7 +12,6 @@ import {
 import HttpStatusCode from '../../src/constants/HttpStatusCode';
 import UserAuthService from '../../src/service/UserAuthService';
 import { container } from 'tsyringe';
-import { reject } from 'bluebird';
 import JsonWebTokenService, { JsonWebToken } from '../../src/service/JsonWebTokenService';
 
 /**

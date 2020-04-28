@@ -24,7 +24,7 @@ export default class UserAuthService {
         private readonly refreshTokenService: RefreshTokenService,
         private readonly serverResponseService: ServerResponseService) { }
 
-    public async login(login: string, password: string): Promise<AuthorizationResult> {
+    public async login(login: string | undefined, password: string | undefined): Promise<AuthorizationResult> {
         if (!login || !password) {
             return this.serverResponseService.generateForbidden(false);
         }

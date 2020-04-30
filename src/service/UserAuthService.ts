@@ -29,7 +29,7 @@ export default class UserAuthService {
             return this.serverResponseService.generateForbidden(false);
         }
         const user: User | null = await this.userService.findByLogin(login);
-        if (user && await this.passwordService.compare(password, user.password)) {
+        if (user && user.isActive && await this.passwordService.compare(password, user.password)) {
             const authenticationToken: string | null = await this.jsonWebTokenService.sign(user);
             const refreshToken: RefreshToken | null = await this.refreshTokenService.createNewToken(user);
             if (authenticationToken && refreshToken) {
@@ -56,7 +56,7 @@ export default class UserAuthService {
             return this.serverResponseService.generateForbidden(false);
         }
         const user: User | null = await this.userService.findById(storedRefreshToken.userId);
-        if (!user) {
+        if (!user || !user.isActive) {
             return this.serverResponseService.generateForbidden(false);
         }
         await this.refreshTokenService.delete(storedRefreshToken);

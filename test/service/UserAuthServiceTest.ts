@@ -9,6 +9,8 @@ import {
     USER_TO_LOGOUT2_LOGIN,
     INVALID_REFRESH_TOKEN,
     USER_TO_DELETE_LOGIN,
+    INACTIVE_USER_LOGIN,
+    ACTIVE_USER_LOGIN,
 } from './ServicesTestEnvironment';
 import HttpStatusCode from '../../src/constants/HttpStatusCode';
 import UserAuthService from '../../src/service/UserAuthService';
@@ -56,6 +58,15 @@ export default function authTests(): void {
         done();
     });
 
+    test('User should not be able to login, if user is not active', async done => {
+        const result: AuthorizationResult = await userAuthService.login(INACTIVE_USER_LOGIN, INVALID_USER_PASS);
+        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
+        expect(result.authorizationGranted).toBe(false);
+        expect(result.authenticationToken).toBeUndefined();
+        expect(result.refreshToken).toBeUndefined();
+        done();
+    });
+
     test('User should not be able to login, with invalid login', async done => {
         const result: AuthorizationResult = await userAuthService.login(INVALID_USER_LOGIN, VALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
@@ -94,6 +105,19 @@ export default function authTests(): void {
         let result: AuthorizationResult = await userAuthService.login(USER_TO_DELETE_LOGIN, VALID_USER_PASS);
         const user: User | null = await userRepository.findByLogin(USER_TO_DELETE_LOGIN);
         await userRepository.delete(user!);
+        result = await userAuthService.refresh(result.refreshToken);
+        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
+        expect(result.authorizationGranted).toBe(false);
+        expect(result.authenticationToken).toBeUndefined();
+        expect(result.refreshToken).toBeUndefined();
+        done();
+    });
+
+    test('User should not be able to refresh authentication token if user has become inactive', async done => {
+        let result: AuthorizationResult = await userAuthService.login(ACTIVE_USER_LOGIN, VALID_USER_PASS);
+        const user: User | null = await userRepository.findByLogin(ACTIVE_USER_LOGIN);
+        user!.isActive = false;
+        await userRepository.save(user!);
         result = await userAuthService.refresh(result.refreshToken);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);

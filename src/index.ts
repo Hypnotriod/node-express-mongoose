@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import { Algorithm } from 'jsonwebtoken';
 import ServerApplication from './application/ServerApplication';
 import ServerApplicationConfig from './application/ServerApplicationConfig';
+import { LoggerModes } from '@overnightjs/logger';
 
 /**
  *
@@ -11,6 +12,7 @@ import ServerApplicationConfig from './application/ServerApplicationConfig';
 
 const config: ServerApplicationConfig = {
   production: (process.env.NODE_ENV === 'production'),
+  loggerMode: LoggerModes.Console,
   serverPort: Number(process.env.PORT) || 3000,
   dbUri: process.env.DB_URI || 'mongodb://localhost:27017/goods_store',
   sessionPrivateKey: process.env.SESSION_PRIVATE_KEY || 'fq5a1e611ae803aa018be3c6d011be47',

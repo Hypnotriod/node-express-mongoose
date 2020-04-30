@@ -1,5 +1,7 @@
 {
   "name": "node-express-mongoose",
+  "author": "Ilya Pikin",
+  "license": "ISC",
   "version": "0.0.1",
   "main": "src/index.js",
   "scripts": {
@@ -14,8 +16,6 @@
     "watch": "tsc -w",
     "build-bundle": "tsc && webpack --config webpack.config.js"
   },
-  "author": "Ilya Pikin",
-  "license": "ISC",
   "dependencies": {
     "@overnightjs/core": "^1.6.15",
     "@overnightjs/logger": "^1.1.10",

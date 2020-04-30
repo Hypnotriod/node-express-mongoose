@@ -4,7 +4,7 @@ import { container, injectable, singleton, inject } from 'tsyringe';
 import { Logger } from '@overnightjs/logger';
 import mongoose from 'mongoose';
 import http from 'http';
-import { getCorsHeaders } from '../controller/middleware/CorsMiddleware';
+import { setCorsHeaders } from '../controller/middleware/CorsMiddleware';
 import ServerApplicationConfig from './ServerApplicationConfig';
 import FaviconController from '../controller/FaviconController';
 import ProductsController from '../controller/ProductsController';
@@ -28,6 +28,7 @@ export default class ServerApplication extends Server {
     }
 
     public async launch(): Promise<ServerApplication> {
+        this.initializeLogger();
         this.initializeRouterHandles();
         await this.establishDBConnection();
         this.initControllers();
@@ -37,6 +38,7 @@ export default class ServerApplication extends Server {
     }
 
     public async launchTest(establishDBConnection: boolean = true, startServer: boolean = false): Promise<ServerApplication> {
+        this.initializeLogger();
         this.initializeRouterHandles();
         if (establishDBConnection) {
             await this.establishDBConnection();
@@ -63,10 +65,17 @@ export default class ServerApplication extends Server {
         }
     }
 
+    private initializeLogger(): void {
+        Logger.mode = this.config.loggerMode;
+        if (this.config.loggerFilePath) {
+            Logger.filePath = this.config.loggerFilePath;
+        }
+    }
+
     private initializeRouterHandles(): void {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use(getCorsHeaders);
+        this.app.use(setCorsHeaders);
     }
 
     private async establishDBConnection(): Promise<void> {

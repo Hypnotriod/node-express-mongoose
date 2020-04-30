@@ -5,6 +5,7 @@ import PasswordService from '../../src/service/PasswordService';
 import UserModel from '../../src/model/UserModel';
 import { UserRole } from '../../src/entity/User';
 import RefreshTokenModel from '../../src/model/RefreshTokenModel';
+import { LoggerModes } from '@overnightjs/logger';
 
 /**
  *
@@ -12,12 +13,13 @@ import RefreshTokenModel from '../../src/model/RefreshTokenModel';
  */
 
 export const ADMIN_USER_LOGIN: string = 'admin';
-export const ADMIN_USER_PASS: string = 'PassW@r2';
+export const USER_TO_DELETE_LOGIN: string = 'userto.delete';
 export const USER_TO_LOGOUT_LOGIN: string = 'logout.user';
 export const USER_TO_LOGOUT2_LOGIN: string = 'logout2.user';
-export const USER_TO_LOGOUT_PASS: string = 'PassW@r2';
-export const INVALID_USER_LOGIN: string = 'admin2';
+export const VALID_USER_PASS: string = 'PassW@r2';
 export const INVALID_USER_PASS: string = 'PassW@r3';
+export const INVALID_USER_LOGIN: string = 'admin2';
+export const INVALID_REFRESH_TOKEN: string = 'invalid-refresh-token';
 
 export default class ServicesTestEnvironment {
     private serverApplication: ServerApplication;
@@ -34,6 +36,7 @@ export default class ServicesTestEnvironment {
     private setupServerApplication(): Promise<ServerApplication> {
         const config: ServerApplicationConfig = {
             production: true,
+            loggerMode: LoggerModes.Off,
             serverPort: 3000,
             dbUri: 'mongodb://localhost:27017/goods_store_test',
             sessionPrivateKey: 'fq5a1e611ae803aa018be3c6d011be47',
@@ -52,19 +55,25 @@ export default class ServicesTestEnvironment {
         await UserModel.deleteMany({});
         await new UserModel({
             login: ADMIN_USER_LOGIN,
-            password: await passwordService.hash(ADMIN_USER_PASS),
+            password: await passwordService.hash(VALID_USER_PASS),
             role: UserRole.ADMIN,
             isActive: true,
         }).save();
         await new UserModel({
             login: USER_TO_LOGOUT_LOGIN,
-            password: await passwordService.hash(USER_TO_LOGOUT_PASS),
+            password: await passwordService.hash(VALID_USER_PASS),
             role: UserRole.ADMIN,
             isActive: true,
         }).save();
         await new UserModel({
             login: USER_TO_LOGOUT2_LOGIN,
-            password: await passwordService.hash(USER_TO_LOGOUT_PASS),
+            password: await passwordService.hash(VALID_USER_PASS),
+            role: UserRole.ADMIN,
+            isActive: true,
+        }).save();
+        await new UserModel({
+            login: USER_TO_DELETE_LOGIN,
+            password: await passwordService.hash(VALID_USER_PASS),
             role: UserRole.ADMIN,
             isActive: true,
         }).save();

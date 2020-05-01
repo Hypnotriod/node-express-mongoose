@@ -1,5 +1,5 @@
 # node-express-mongoose
-WIP Template project of `Node.js` `server`, based on `Express`, `Mongoose` using `TypeScript`.  
+WIP on template project of `Node.js` `server`, based on `Express`, `Mongoose` using `TypeScript`.  
 Configured for `VSCode` IDE.
 
 ## Links:
@@ -14,5 +14,7 @@ Configured for `VSCode` IDE.
 * [bcrypt](https://www.npmjs.com/package/bcrypt)
 * [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 * [uuidv4](https://www.npmjs.com/package/uuidv4)
+* [jest](https://jestjs.io/docs/en/getting-started)
+* [ts-mockery](https://www.npmjs.com/package/ts-mockery)
 * [webpack production guide](https://webpack.js.org/guides/production/)
 * [typeScript compiler options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)

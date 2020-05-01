@@ -22,7 +22,7 @@ export default class ProductService {
 
     @AllowUserRoles([UserRole.STOREKEEPER])
     public async addNewProduct(jsonWebToken: JsonWebToken | undefined, data: any | Product): Promise<ServerResponseResult> {
-        if (!await this.productRepository.save(data)) {
+        if (await this.productRepository.save(data)) {
             return this.serverResponseService.generateOk();
         } else {
             return this.serverResponseService.generateMalformed();

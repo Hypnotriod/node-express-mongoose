@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { Mock } from 'ts-mockery';
 import AuthorizationResult from '../../src/dto/AuthorizationResult';
 import {
     ADMIN_USER_LOGIN,
@@ -18,6 +19,10 @@ import { container } from 'tsyringe';
 import JsonWebTokenService, { JsonWebToken } from '../../src/service/JsonWebTokenService';
 import UserRepository from '../../src/repository/UserRepository';
 import User from '../../src/entity/User';
+import UserService from '../../src/service/UserService';
+import RefreshTokenService from '../../src/service/RefreshTokenService';
+import ServerResponseService from '../../src/service/ServerResponseService';
+import PasswordService from '../../src/service/PasswordService';
 
 /**
  *
@@ -25,12 +30,23 @@ import User from '../../src/entity/User';
  */
 
 let userAuthService: UserAuthService;
+let userAuthServiceJsonWebTokenSignFail: UserAuthService;
 let jsonWebTokenService: JsonWebTokenService;
 let userRepository: UserRepository;
 beforeEach(() => {
     userAuthService = container.resolve(UserAuthService);
     jsonWebTokenService = container.resolve(JsonWebTokenService);
     userRepository = container.resolve(UserRepository);
+
+    userAuthServiceJsonWebTokenSignFail = new UserAuthService(
+        container.resolve(UserService),
+        container.resolve(PasswordService),
+        Mock.of<JsonWebTokenService>({
+            sign: (user) => new Promise((resolve, reject) => resolve(null)),
+        }),
+        container.resolve(RefreshTokenService),
+        container.resolve(ServerResponseService),
+    );
 });
 
 function waitMs(ms: number): Promise<void> {
@@ -40,7 +56,7 @@ function waitMs(ms: number): Promise<void> {
 }
 
 export default function authTests(): void {
-    test('User should get authentication and refresh tokens on login, with valid creadentials', async done => {
+    test('User should get authentication and refresh tokens on login with valid creadentials', async done => {
         const result: AuthorizationResult = await userAuthService.login(ADMIN_USER_LOGIN, VALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.OK);
         expect(result.authorizationGranted).toBe(true);
@@ -49,7 +65,16 @@ export default function authTests(): void {
         done();
     });
 
-    test('User should not be able to login, with invalid password', async done => {
+    test('User should not be able to login on authentication token sign fail', async done => {
+        const result: AuthorizationResult = await userAuthServiceJsonWebTokenSignFail.login(ADMIN_USER_LOGIN, VALID_USER_PASS);
+        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
+        expect(result.authorizationGranted).toBe(false);
+        expect(result.authenticationToken).toBeUndefined();
+        expect(result.refreshToken).toBeUndefined();
+        done();
+    });
+
+    test('User should not be able to login with invalid password', async done => {
         const result: AuthorizationResult = await userAuthService.login(ADMIN_USER_LOGIN, INVALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
@@ -58,7 +83,7 @@ export default function authTests(): void {
         done();
     });
 
-    test('User should not be able to login, if user is not active', async done => {
+    test('User should not be able to login if user is not active', async done => {
         const result: AuthorizationResult = await userAuthService.login(INACTIVE_USER_LOGIN, INVALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
@@ -67,7 +92,7 @@ export default function authTests(): void {
         done();
     });
 
-    test('User should not be able to login, with invalid login', async done => {
+    test('User should not be able to login with invalid login', async done => {
         const result: AuthorizationResult = await userAuthService.login(INVALID_USER_LOGIN, VALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
@@ -76,7 +101,7 @@ export default function authTests(): void {
         done();
     });
 
-    test('User should not be able to login, with undefined password or login', async done => {
+    test('User should not be able to login with undefined password or login', async done => {
         let result: AuthorizationResult = await userAuthService.login(undefined, VALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
@@ -98,6 +123,16 @@ export default function authTests(): void {
         expect(result.authorizationGranted).toBe(true);
         expect(result.authenticationToken).toBeDefined();
         expect(result.refreshToken).toBeDefined();
+        done();
+    });
+
+    test('User should not be able to refresh authentication token on authentication token sign fail', async done => {
+        let result: AuthorizationResult = await userAuthService.login(ADMIN_USER_LOGIN, VALID_USER_PASS);
+        result = await userAuthServiceJsonWebTokenSignFail.refresh(result.refreshToken);
+        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
+        expect(result.authorizationGranted).toBe(false);
+        expect(result.authenticationToken).toBeUndefined();
+        expect(result.refreshToken).toBeUndefined();
         done();
     });
 

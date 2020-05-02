@@ -10,9 +10,9 @@ import ServerResponseService from '../ServerResponseService';
  */
 
 export default function AllowUserRoles(permittedRoles: UserRole[]): any {
-    return (target: ServerResponseResult, key: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
+    return (target: MethodDecorator, key: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
         return {
-            value: function (...args: any[]): ServerResponseResult {
+            value: (...args: any[]): ServerResponseResult => {
                 const jsonWebToken: JsonWebToken | undefined = args[0];
                 if (!jsonWebToken || !permittedRoles.includes(jsonWebToken.userRole)) {
                     const serverResponseService: ServerResponseService = container.resolve(ServerResponseService);

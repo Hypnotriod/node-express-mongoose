@@ -15,7 +15,7 @@ import { LoggerModes } from '@overnightjs/logger';
 export const ADMIN_USER_LOGIN: string = 'admin';
 export const USER_TO_DELETE_LOGIN: string = 'userto.delete';
 export const USER_TO_LOGOUT_LOGIN: string = 'logout.user';
-export const USER_TO_LOGOUT2_LOGIN: string = 'logout2.user';
+export const USER_TO_LOGOUT_ON_TIMEOUT_LOGIN: string = 'logoutontimeout.user';
 export const INACTIVE_USER_LOGIN: string = 'inactive.user';
 export const ACTIVE_USER_LOGIN: string = 'active.user';
 export const VALID_USER_PASS: string = 'PassW@r2';
@@ -68,7 +68,7 @@ export default class ServicesTestEnvironment {
             isActive: true,
         }).save();
         await new UserModel({
-            login: USER_TO_LOGOUT2_LOGIN,
+            login: USER_TO_LOGOUT_ON_TIMEOUT_LOGIN,
             password: await passwordService.hash(VALID_USER_PASS),
             role: UserRole.ADMIN,
             isActive: true,

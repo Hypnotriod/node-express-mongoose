@@ -7,7 +7,7 @@ import {
     INVALID_USER_LOGIN,
     INVALID_USER_PASS,
     USER_TO_LOGOUT_LOGIN,
-    USER_TO_LOGOUT2_LOGIN,
+    USER_TO_LOGOUT_ON_TIMEOUT_LOGIN,
     INVALID_REFRESH_TOKEN,
     USER_TO_DELETE_LOGIN,
     INACTIVE_USER_LOGIN,
@@ -65,26 +65,8 @@ export default function authTests(): void {
         done();
     });
 
-    test('User should not be able to login on authentication token sign fail', async done => {
-        const result: AuthorizationResult = await userAuthServiceJsonWebTokenSignFail.login(ADMIN_USER_LOGIN, VALID_USER_PASS);
-        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
-        expect(result.authorizationGranted).toBe(false);
-        expect(result.authenticationToken).toBeUndefined();
-        expect(result.refreshToken).toBeUndefined();
-        done();
-    });
-
     test('User should not be able to login with invalid password', async done => {
         const result: AuthorizationResult = await userAuthService.login(ADMIN_USER_LOGIN, INVALID_USER_PASS);
-        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
-        expect(result.authorizationGranted).toBe(false);
-        expect(result.authenticationToken).toBeUndefined();
-        expect(result.refreshToken).toBeUndefined();
-        done();
-    });
-
-    test('User should not be able to login if user is not active', async done => {
-        const result: AuthorizationResult = await userAuthService.login(INACTIVE_USER_LOGIN, INVALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
         expect(result.authenticationToken).toBeUndefined();
@@ -109,6 +91,31 @@ export default function authTests(): void {
         expect(result.refreshToken).toBeUndefined();
 
         result = await userAuthService.login(ADMIN_USER_LOGIN, undefined);
+        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
+        expect(result.authorizationGranted).toBe(false);
+        expect(result.authenticationToken).toBeUndefined();
+        expect(result.refreshToken).toBeUndefined();
+        done();
+
+        result = await userAuthService.login(undefined, undefined);
+        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
+        expect(result.authorizationGranted).toBe(false);
+        expect(result.authenticationToken).toBeUndefined();
+        expect(result.refreshToken).toBeUndefined();
+        done();
+    });
+
+    test('User should not be able to login on authentication token sign fail', async done => {
+        const result: AuthorizationResult = await userAuthServiceJsonWebTokenSignFail.login(ADMIN_USER_LOGIN, VALID_USER_PASS);
+        expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
+        expect(result.authorizationGranted).toBe(false);
+        expect(result.authenticationToken).toBeUndefined();
+        expect(result.refreshToken).toBeUndefined();
+        done();
+    });
+
+    test('User should not be able to login if user is not active', async done => {
+        const result: AuthorizationResult = await userAuthService.login(INACTIVE_USER_LOGIN, VALID_USER_PASS);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
         expect(result.authenticationToken).toBeUndefined();
@@ -162,7 +169,7 @@ export default function authTests(): void {
     });
 
     test('User should not be able to refresh authentication token by invalid refresh token', async done => {
-        let result: AuthorizationResult = await userAuthService.refresh(INVALID_REFRESH_TOKEN);
+        const result: AuthorizationResult = await userAuthService.refresh(INVALID_REFRESH_TOKEN);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
         expect(result.authenticationToken).toBeUndefined();
@@ -171,7 +178,7 @@ export default function authTests(): void {
     });
 
     test('User should not be able to refresh authentication token by undefined refresh token', async done => {
-        let result: AuthorizationResult = await userAuthService.refresh(undefined);
+        const result: AuthorizationResult = await userAuthService.refresh(undefined);
         expect(result.httpStatusCode).toBe(HttpStatusCode.FORBIDDEN);
         expect(result.authorizationGranted).toBe(false);
         expect(result.authenticationToken).toBeUndefined();
@@ -189,7 +196,7 @@ export default function authTests(): void {
     });
 
     test('User should not be able to logout if authentication token has expired', async done => {
-        let result: AuthorizationResult = await userAuthService.login(USER_TO_LOGOUT2_LOGIN, VALID_USER_PASS);
+        let result: AuthorizationResult = await userAuthService.login(USER_TO_LOGOUT_ON_TIMEOUT_LOGIN, VALID_USER_PASS);
         await waitMs(1000);
         const jsonWebToken: JsonWebToken | null = await jsonWebTokenService.verify(result.authenticationToken!);
         result = await userAuthService.logout(jsonWebToken!);

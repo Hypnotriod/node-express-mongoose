@@ -22,7 +22,7 @@ export default class UserService {
 
     @AllowUserRoles([UserRole.ADMIN])
     public async addNewUser(jsonWebToken: JsonWebToken | undefined, data: any | User): Promise<ServerResponseResult> {
-        if (!this.save(data)) {
+        if (!await this.save(data)) {
             return this.serverResponseService.generateMalformed(jsonWebToken !== undefined);
         }
         return this.serverResponseService.generateOk();

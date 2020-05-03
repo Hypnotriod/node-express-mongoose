@@ -6,6 +6,7 @@ import { JsonWebToken } from './JsonWebTokenService';
 import ServerResponseResult from '../dto/ServerResponseResult';
 import ServerResponseService from './ServerResponseService';
 import AllowUserRoles from './decorator/AllowUserRoles';
+import { UserInfo } from '../dto/UserInfo';
 
 /**
  *
@@ -22,16 +23,57 @@ export default class UserService {
 
     @AllowUserRoles([UserRole.ADMIN])
     public async addNewUser(jsonWebToken: JsonWebToken | undefined, data: any | User): Promise<ServerResponseResult> {
+        if (!this.passwordService.validate(data.password) ||
+            !await this.userRepository.validate(data)) {
+            return this.serverResponseService.generateBadRequest();
+        }
         if (!await this.save(data)) {
-            return this.serverResponseService.generateMalformed(jsonWebToken !== undefined);
+            return this.serverResponseService.generateConflict();
+        }
+        return this.serverResponseService.generateOk();
+    }
+
+    @AllowUserRoles([UserRole.ADMIN])
+    public async deleteUser(jsonWebToken: JsonWebToken | undefined, userId: string | undefined): Promise<ServerResponseResult> {
+        if (!userId) {
+            return this.serverResponseService.generateBadRequest();
+        }
+        const user: User | null = await this.userRepository.findById(userId);
+        if (!user || !await this.delete(user)) {
+            return this.serverResponseService.generateConflict();
+        }
+        return this.serverResponseService.generateOk();
+    }
+
+    @AllowUserRoles([UserRole.ADMIN])
+    public async getAllUsers(jsonWebToken: JsonWebToken | undefined): Promise<ServerResponseResult> {
+        const users: User[] = await this.findAll();
+        return this.serverResponseService.generateOkWithData(
+            true, users.map(this.mapToUserInfo));
+    }
+
+    public async changeUserPassword(
+        login: string | undefined,
+        oldPassword: string | undefined,
+        newPassword: string | undefined): Promise<ServerResponseResult> {
+        if (!login || !oldPassword || !newPassword) {
+            return this.serverResponseService.generateForbidden();
+        }
+        const user: User | null = await this.findByLogin(login);
+        if (!user || !user.isActive || !await this.passwordService.compare(oldPassword, user.password)) {
+            return this.serverResponseService.generateForbidden();
+        }
+        if (!this.passwordService.validate(newPassword)) {
+            return this.serverResponseService.generateBadRequest();
+        }
+        user.password = newPassword;
+        if (!await this.save(user)) {
+            return this.serverResponseService.generateConflict();
         }
         return this.serverResponseService.generateOk();
     }
 
     public async save(data: any | User): Promise<User | null> {
-        if (!this.passwordService.validate(data.password)) {
-            return null;
-        }
         const hashedPassword: string | null = await this.passwordService.hash(data.password);
         if (!hashedPassword) {
             return null;
@@ -39,6 +81,10 @@ export default class UserService {
 
         data.password = hashedPassword;
         return this.userRepository.save(data);
+    }
+
+    public delete(user: User): Promise<User | null> {
+        return this.userRepository.delete(user);
     }
 
     public findAll(): Promise<User[]> {
@@ -51,5 +97,17 @@ export default class UserService {
 
     public findById(userId: string): Promise<User | null> {
         return this.userRepository.findById(userId);
+    }
+
+    private mapToUserInfo(user: User): UserInfo {
+        return {
+            id: user.id,
+            login: user.login,
+            role: user.role,
+            isActive: user.isActive,
+            createdAt: user.createdAt!,
+            updatedAt: user.updatedAt!,
+            version: user.__v!,
+        };
     }
 }

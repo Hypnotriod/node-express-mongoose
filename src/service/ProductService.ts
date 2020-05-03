@@ -3,10 +3,10 @@ import { JsonWebToken } from './JsonWebTokenService';
 import { UserRole } from '../entity/User';
 import Product from '../entity/Product';
 import ProductRepository from '../repository/ProductRepository';
-import UserService from './UserService';
 import ServerResponseResult from '../dto/ServerResponseResult';
 import ServerResponseService from './ServerResponseService';
 import AllowUserRoles from './decorator/AllowUserRoles';
+import { FullProductInfo, ReducedProductInfo } from '../dto/ProductInfo';
 
 /**
  *
@@ -22,11 +22,13 @@ export default class ProductService {
 
     @AllowUserRoles([UserRole.STOREKEEPER])
     public async addNewProduct(jsonWebToken: JsonWebToken | undefined, data: any | Product): Promise<ServerResponseResult> {
-        if (await this.productRepository.save(data)) {
-            return this.serverResponseService.generateOk();
-        } else {
-            return this.serverResponseService.generateMalformed();
+        if (!await this.productRepository.validate(data)) {
+            return this.serverResponseService.generateBadRequest();
         }
+        if (!await this.productRepository.save(data)) {
+            return this.serverResponseService.generateConflict();
+        }
+        return this.serverResponseService.generateOk();
     }
 
     public async getAllProducts(jsonWebToken: JsonWebToken | undefined): Promise<ServerResponseResult> {
@@ -42,18 +44,18 @@ export default class ProductService {
         return this.serverResponseService.generateOkWithData(jsonWebToken !== undefined, reducedProducts);
     }
 
-    private mapToFullProductInfo(product: Product): object {
+    private mapToFullProductInfo(product: Product): FullProductInfo {
         return {
             ...this.mapToReducedProductInfo(product),
             reservedQuantity: product.reservedQuantity,
             isHidden: product.isHidden,
-            version: product.__v,
-            createdAt: product.createdAt,
-            updatedAt: product.updatedAt,
+            version: product.__v!,
+            createdAt: product.createdAt!,
+            updatedAt: product.updatedAt!,
         };
     }
 
-    private mapToReducedProductInfo(product: Product): object {
+    private mapToReducedProductInfo(product: Product): ReducedProductInfo {
         return {
             id: product._id,
             name: product.name,
@@ -63,8 +65,8 @@ export default class ProductService {
             currency: product.currency,
             inStockQuantity: product.inStockQuantity,
             isFractional: product.isFractional,
-            description: product.description,
-            discounts: product.discounts,
+            description: product.description || '',
+            discounts: product.discounts || [],
         };
     }
 }

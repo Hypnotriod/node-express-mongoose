@@ -3,7 +3,6 @@ import ServerResponseResult from '../dto/ServerResponseResult';
 import HttpStatusCode from '../constants/HttpStatusCode';
 import SeverErrorDescription from '../constants/ServerErrorDescription';
 import AuthorizationResult from '../dto/AuthorizationResult';
-import ServerOperationErrorCode from '../constants/ServerOperationErrorCode';
 
 /**
  *
@@ -39,16 +38,23 @@ export default class ServerResponseService {
         };
     }
 
-    public generateMalformed(authorizationGranted: boolean = true): ServerResponseResult {
+    public generateBadRequest(authorizationGranted: boolean = true): ServerResponseResult {
         return {
-            httpStatusCode: HttpStatusCode.PARTIAL_CONTENT,
-            operationErrorCode: ServerOperationErrorCode.MALFORMED,
-            errorDescription: SeverErrorDescription.MALFORMED,
+            httpStatusCode: HttpStatusCode.BAD_REQUEST,
+            errorDescription: SeverErrorDescription.BAD_REQUEST,
             authorizationGranted,
         };
     }
 
-    public generateForbidden(authorizationGranted: boolean): ServerResponseResult {
+    public generateConflict(authorizationGranted: boolean = true): ServerResponseResult {
+        return {
+            httpStatusCode: HttpStatusCode.CONFLICT,
+            errorDescription: SeverErrorDescription.CONLICT,
+            authorizationGranted,
+        };
+    }
+
+    public generateForbidden(authorizationGranted: boolean = false): ServerResponseResult {
         return {
             httpStatusCode: HttpStatusCode.FORBIDDEN,
             errorDescription: SeverErrorDescription.FORBIDDEN,

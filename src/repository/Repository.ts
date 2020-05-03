@@ -9,10 +9,21 @@ import { Logger } from '@overnightjs/logger';
 export default class Repository<T extends Document> {
     constructor(protected readonly model: Model<T>) { }
 
-    public async save(data: T | any): Promise<T | null> {
+    public async validate(data: T | any): Promise<boolean> {
         const entity: T = new this.model(data);
         try {
             await entity.validate();
+        } catch (err) {
+            Logger.Info(`Validation fail for ${this.model.modelName}: ${JSON.stringify(data)}`);
+            Logger.Info(err);
+            return false;
+        }
+        return true;
+    }
+
+    public async save(data: T | any): Promise<T | null> {
+        const entity: T = new this.model(data);
+        try {
             return await entity.save();
         } catch (err) {
             Logger.Err(`Unable to save ${this.model.modelName}: ${JSON.stringify(data)}`);

@@ -11,6 +11,7 @@ import ProductsController from '../controller/ProductsController';
 import DiscountsController from '../controller/DiscountsController';
 import UserController from '../controller/UserController';
 import UserAuthController from '../controller/UserAuthController';
+import NotFoundController from '../controller/NotFoundController';
 
 /**
  *
@@ -100,6 +101,7 @@ export default class ServerApplication extends Server {
             container.resolve(DiscountsController),
             container.resolve(UserController),
             container.resolve(UserAuthController),
+            container.resolve(NotFoundController),
         ]);
     }
 

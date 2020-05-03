@@ -26,7 +26,7 @@ export default class UserAuthService {
 
     public async login(login: string | undefined, password: string | undefined): Promise<AuthorizationResult> {
         if (!login || !password) {
-            return this.serverResponseService.generateForbidden(false);
+            return this.serverResponseService.generateForbidden();
         }
         const user: User | null = await this.userService.findByLogin(login);
         if (user && user.isActive && await this.passwordService.compare(password, user.password)) {
@@ -36,12 +36,12 @@ export default class UserAuthService {
                 return this.serverResponseService.generateAuthorized(authenticationToken, refreshToken.token);
             }
         }
-        return this.serverResponseService.generateForbidden(false);
+        return this.serverResponseService.generateForbidden();
     }
 
     public async logout(jsonWebToken: JsonWebToken | undefined): Promise<ServerResponseResult> {
         if (!jsonWebToken) {
-            return this.serverResponseService.generateForbidden(false);
+            return this.serverResponseService.generateForbidden();
         }
         await this.refreshTokenService.deleteAllByUserId(jsonWebToken.userId);
         return this.serverResponseService.generateOk();
@@ -49,15 +49,15 @@ export default class UserAuthService {
 
     public async refresh(providedRefreshToken: string | undefined): Promise<AuthorizationResult> {
         if (!providedRefreshToken) {
-            return this.serverResponseService.generateForbidden(false);
+            return this.serverResponseService.generateForbidden();
         }
         let storedRefreshToken: RefreshToken | null = await this.refreshTokenService.findByToken(providedRefreshToken);
         if (!storedRefreshToken) {
-            return this.serverResponseService.generateForbidden(false);
+            return this.serverResponseService.generateForbidden();
         }
         const user: User | null = await this.userService.findById(storedRefreshToken.userId);
         if (!user || !user.isActive) {
-            return this.serverResponseService.generateForbidden(false);
+            return this.serverResponseService.generateForbidden();
         }
         await this.refreshTokenService.delete(storedRefreshToken);
         const newAuthenticationToken: string | null = await this.jsonWebTokenService.sign(user);
@@ -65,7 +65,7 @@ export default class UserAuthService {
         if (newAuthenticationToken && newRefreshToken) {
             return this.serverResponseService.generateAuthorized(newAuthenticationToken, newRefreshToken.token);
         } else {
-            return this.serverResponseService.generateForbidden(false);
+            return this.serverResponseService.generateForbidden();
         }
     }
 }

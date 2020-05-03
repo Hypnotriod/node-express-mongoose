@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import Entity from './Entity';
 
 /**
  *
@@ -11,7 +11,7 @@ export enum UserRole {
     STOREKEEPER = 'storekeeper',
 }
 
-export default interface User extends Document {
+export default interface User extends Entity {
     login: string;
     password: string;
     role: UserRole;

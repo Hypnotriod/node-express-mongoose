@@ -26,7 +26,7 @@ const schema: Schema = new Schema({
         type: String,
         required: true,
         trim: true,
-        match: RegExp('admin|seller|storekeeper'),
+        match: RegExp('^(admin|seller|storekeeper)$'),
     },
     isActive: {
         type: Boolean,

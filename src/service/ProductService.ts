@@ -6,7 +6,7 @@ import ProductRepository from '../repository/ProductRepository';
 import ServerResponseResult from '../dto/ServerResponseResult';
 import ServerResponseService from './ServerResponseService';
 import AllowUserRoles from './decorator/AllowUserRoles';
-import { FullProductInfo, ReducedProductInfo } from '../dto/ProductInfo';
+import ProductQueryResult, { ReducedProductQueryResult } from '../dto/ProductQueryResult';
 
 /**
  *
@@ -44,7 +44,7 @@ export default class ProductService {
         return this.serverResponseService.generateOkWithData(jsonWebToken !== undefined, reducedProducts);
     }
 
-    private mapToFullProductInfo(product: Product): FullProductInfo {
+    private mapToFullProductInfo(product: Product): ProductQueryResult {
         return {
             ...this.mapToReducedProductInfo(product),
             reservedQuantity: product.reservedQuantity,
@@ -55,7 +55,7 @@ export default class ProductService {
         };
     }
 
-    private mapToReducedProductInfo(product: Product): ReducedProductInfo {
+    private mapToReducedProductInfo(product: Product): ReducedProductQueryResult {
         return {
             id: product._id,
             name: product.name,

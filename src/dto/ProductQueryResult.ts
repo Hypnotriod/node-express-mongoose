@@ -5,7 +5,7 @@ import { ProductUnits } from '../entity/Product';
  * @author Ilya Pikin
  */
 
-export interface ReducedProductInfo {
+export interface ReducedProductQueryResult {
     id: string;
     name: string;
     units: ProductUnits;
@@ -18,7 +18,7 @@ export interface ReducedProductInfo {
     discounts: object[];
 }
 
-export interface FullProductInfo extends ReducedProductInfo {
+export default interface ProductQueryResult extends ReducedProductQueryResult {
     reservedQuantity: number;
     isHidden: boolean;
     version: number;

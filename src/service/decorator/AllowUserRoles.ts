@@ -14,7 +14,7 @@ export default function AllowUserRoles(permittedRoles: UserRole[]): any {
         return {
             value: function (...args: any[]): ServerResponseResult {
                 const jsonWebToken: JsonWebToken | undefined = args[0];
-                if (!jsonWebToken || !permittedRoles.includes(jsonWebToken.userRole)) {
+                if (!jsonWebToken || !jsonWebToken.userRole || !permittedRoles.includes(jsonWebToken.userRole)) {
                     const serverResponseService: ServerResponseService = container.resolve(ServerResponseService);
                     return serverResponseService.generateForbidden(jsonWebToken !== undefined);
                 }

@@ -5,7 +5,7 @@ import { UserRole } from '../entity/User';
  * @author Ilya Pikin
  */
 
-export interface UserInfo {
+export default interface UserQueryResult {
     id: string;
     login: string;
     role: UserRole;

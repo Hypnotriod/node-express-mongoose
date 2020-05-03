@@ -26,16 +26,28 @@ export default class UserController {
     @Post('add')
     @Middleware(getJsonWebToken)
     private async addNewUser(request: Request, response: Response): Promise<void> {
-        const result: ServerResponseResult = await this.userService.addNewUser(response.locals.jsonWebToken, request.body);
+        const result: ServerResponseResult = await this.userService.addNewUser(
+            response.locals.jsonWebToken,
+            request.body);
         response.status(result.httpStatusCode).json(result);
     }
 
-    @Delete('delete')
+    @Post('delete')
     @Middleware(getJsonWebToken)
     private async deleteUser(request: Request, response: Response): Promise<void> {
         const result: ServerResponseResult = await this.userService.deleteUser(
             response.locals.jsonWebToken,
             request.body.userId);
+        response.status(result.httpStatusCode).json(result);
+    }
+
+    @Post('set-active')
+    @Middleware(getJsonWebToken)
+    private async updateUserActiveState(request: Request, response: Response): Promise<void> {
+        const result: ServerResponseResult = await this.userService.setUserActiveState(
+            response.locals.jsonWebToken,
+            request.body.userId,
+            request.body.isActive);
         response.status(result.httpStatusCode).json(result);
     }
 

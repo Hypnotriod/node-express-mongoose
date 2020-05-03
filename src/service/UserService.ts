@@ -1,12 +1,12 @@
 import { singleton, injectable } from 'tsyringe';
-import UserRepository from '../repository/UserRepository';
-import User, { UserRole } from '../entity/User';
-import PasswordService from './PasswordService';
 import { JsonWebToken } from './JsonWebTokenService';
+import User, { UserRole } from '../entity/User';
+import UserRepository from '../repository/UserRepository';
+import PasswordService from './PasswordService';
 import ServerResponseResult from '../dto/ServerResponseResult';
 import ServerResponseService from './ServerResponseService';
 import AllowUserRoles from './decorator/AllowUserRoles';
-import { UserInfo } from '../dto/UserInfo';
+import UserQueryResult from '../dto/UserQueryResult';
 
 /**
  *
@@ -46,10 +46,29 @@ export default class UserService {
     }
 
     @AllowUserRoles([UserRole.ADMIN])
+    public async setUserActiveState(
+        jsonWebToken: JsonWebToken | undefined,
+        userId: string | undefined,
+        isActive: boolean | undefined): Promise<ServerResponseResult> {
+        if (!userId || isActive === undefined) {
+            return this.serverResponseService.generateBadRequest();
+        }
+        const user: User | null = await this.userRepository.findById(userId);
+        if (!user) {
+            return this.serverResponseService.generateConflict();
+        }
+        user.isActive = isActive;
+        if (!await this.save(user)) {
+            return this.serverResponseService.generateConflict();
+        }
+        return this.serverResponseService.generateOk();
+    }
+
+    @AllowUserRoles([UserRole.ADMIN])
     public async getAllUsers(jsonWebToken: JsonWebToken | undefined): Promise<ServerResponseResult> {
         const users: User[] = await this.findAll();
         return this.serverResponseService.generateOkWithData(
-            true, users.map(this.mapToUserInfo));
+            true, users.map(this.mapToUserQueryResult.bind(this)));
     }
 
     public async changeUserPassword(
@@ -99,7 +118,7 @@ export default class UserService {
         return this.userRepository.findById(userId);
     }
 
-    private mapToUserInfo(user: User): UserInfo {
+    private mapToUserQueryResult(user: User): UserQueryResult {
         return {
             id: user.id,
             login: user.login,

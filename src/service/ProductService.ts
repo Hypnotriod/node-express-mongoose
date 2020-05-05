@@ -22,6 +22,7 @@ export default class ProductService {
 
     @AllowUserRoles([UserRole.STOREKEEPER])
     public async addNewProduct(jsonWebToken: JsonWebToken | undefined, data: any | Product): Promise<ServerResponseResult> {
+        data._id = undefined;
         if (!await this.productRepository.validate(data)) {
             return this.serverResponseService.generateBadRequest();
         }
@@ -31,17 +32,29 @@ export default class ProductService {
         return this.serverResponseService.generateOk();
     }
 
+    public async getProductById(jsonWebToken: JsonWebToken | undefined, productId: string): Promise<ServerResponseResult> {
+        const isStorekeeper: boolean = (jsonWebToken !== undefined && jsonWebToken.userRole === UserRole.STOREKEEPER);
+        const product: Product | null = await this.productRepository.findById(productId);
+        let queryResultProduct: object | null;
+        if (product === null || (product.isHidden && !isStorekeeper)) {
+            queryResultProduct = null;
+        } else {
+            queryResultProduct = isStorekeeper
+                ? this.mapToFullProductInfo(product)
+                : this.mapToReducedProductInfo(product);
+        }
+        return this.serverResponseService.generateOkWithData(jsonWebToken !== undefined, queryResultProduct);
+    }
+
     public async getAllProducts(jsonWebToken: JsonWebToken | undefined): Promise<ServerResponseResult> {
         const isStorekeeper: boolean = (jsonWebToken !== undefined && jsonWebToken.userRole === UserRole.STOREKEEPER);
-        let products: Product[] = await this.productRepository.findAll();
-        let reducedProducts: object[];
-
-        reducedProducts = isStorekeeper
+        const products: Product[] = await this.productRepository.findAll();
+        const queryResultProducts: object[] = isStorekeeper
             ? products.map(this.mapToFullProductInfo.bind(this))
             : products.filter(product => !product.isHidden)
                 .map(this.mapToReducedProductInfo.bind(this));
 
-        return this.serverResponseService.generateOkWithData(jsonWebToken !== undefined, reducedProducts);
+        return this.serverResponseService.generateOkWithData(jsonWebToken !== undefined, queryResultProducts);
     }
 
     private mapToFullProductInfo(product: Product): ProductQueryResult {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Controller, Post, Middleware } from '@overnightjs/core';
 import { injectable, singleton } from 'tsyringe';
-import { getJsonWebToken } from './middleware/JsonWebTokenMiddleware';
+import processJsonWebToken from './middleware/JsonWebTokenMiddleware';
 import UserAuthService from '../service/UserAuthService';
 import ServerResponseResult from '../dto/ServerResponseResult';
 
@@ -25,7 +25,7 @@ export default class UserAuthController {
     }
 
     @Post('logout')
-    @Middleware(getJsonWebToken)
+    @Middleware(processJsonWebToken)
     private async logout(request: Request, response: Response): Promise<void> {
         const result: ServerResponseResult = await this.userAuthService.logout(
             response.locals.jsonWebToken);

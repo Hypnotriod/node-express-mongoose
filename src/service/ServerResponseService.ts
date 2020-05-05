@@ -21,7 +21,7 @@ export default class ServerResponseService {
         };
     }
 
-    public generateOkWithData(authorizationGranted: boolean = true, data: object | object[] = {}): ServerResponseResult {
+    public generateOkWithData(authorizationGranted: boolean = true, data: object | object[] | null): ServerResponseResult {
         return {
             httpStatusCode: HttpStatusCode.OK,
             authorizationGranted,
@@ -35,6 +35,14 @@ export default class ServerResponseService {
             authorizationGranted: true,
             authenticationToken,
             refreshToken,
+        };
+    }
+
+    public generateUnauthorized(): ServerResponseResult {
+        return {
+            httpStatusCode: HttpStatusCode.UNAUTHORIZED,
+            errorDescription: SeverErrorDescription.UNAUTHORIZED,
+            authorizationGranted: false,
         };
     }
 

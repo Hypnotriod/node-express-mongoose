@@ -10,7 +10,7 @@ import ServerResponseService from '../ServerResponseService';
  */
 
 export default function AllowUserRoles(permittedRoles: UserRole[]): any {
-    return (target: MethodDecorator, key: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
+    return (target: any, key: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
         return {
             value: function (...args: any[]): ServerResponseResult {
                 const jsonWebToken: JsonWebToken | undefined = args[0];

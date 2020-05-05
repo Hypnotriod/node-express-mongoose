@@ -4,7 +4,7 @@ import { container, injectable, singleton, inject } from 'tsyringe';
 import { Logger } from '@overnightjs/logger';
 import mongoose from 'mongoose';
 import http from 'http';
-import { setCorsHeaders } from '../controller/middleware/CorsMiddleware';
+import processCorsHeaders from '../controller/middleware/CorsMiddleware';
 import ServerApplicationConfig from './ServerApplicationConfig';
 import FaviconController from '../controller/FaviconController';
 import ProductsController from '../controller/ProductsController';
@@ -76,7 +76,7 @@ export default class ServerApplication extends Server {
     private initializeRouterHandles(): void {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use(setCorsHeaders);
+        this.app.use(processCorsHeaders);
     }
 
     private async establishDBConnection(): Promise<void> {

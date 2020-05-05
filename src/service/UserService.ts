@@ -71,10 +71,18 @@ export default class UserService {
             true, users.map(this.mapToUserQueryResult.bind(this)));
     }
 
+    @AllowUserRoles([UserRole.ADMIN])
+    public async getUserById(jsonWebToken: JsonWebToken | undefined, userId: string): Promise<ServerResponseResult> {
+        const user: User | null = await this.findById(userId);
+        return this.serverResponseService.generateOkWithData(
+            true, !user ? null : this.mapToUserQueryResult(user));
+    }
+
     public async changeUserPassword(
         login: string | undefined,
         oldPassword: string | undefined,
-        newPassword: string | undefined): Promise<ServerResponseResult> {
+        newPassword: string | undefined,
+        newPasswordConfirm: string | undefined): Promise<ServerResponseResult> {
         if (!login || !oldPassword || !newPassword) {
             return this.serverResponseService.generateForbidden();
         }
@@ -82,7 +90,7 @@ export default class UserService {
         if (!user || !user.isActive || !await this.passwordService.compare(oldPassword, user.password)) {
             return this.serverResponseService.generateForbidden();
         }
-        if (!this.passwordService.validate(newPassword)) {
+        if (!this.passwordService.validate(newPassword) || newPassword !== newPasswordConfirm) {
             return this.serverResponseService.generateBadRequest();
         }
         user.password = newPassword;

@@ -9,6 +9,6 @@ import SeverErrorDescription from '../constants/ServerErrorDescription';
 export default interface ServerResponseResult {
     httpStatusCode: HttpStatusCode;
     authorizationGranted: boolean;
-    data?: object | object[];
+    data?: object | object[] | null;
     errorDescription?: SeverErrorDescription;
 }

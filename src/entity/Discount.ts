@@ -10,6 +10,4 @@ export default interface Discount extends Entity {
     discount: number;
     isActive: boolean;
     rule: DiscountRule;
-    createdAt?: string;
-    updatedAt?: string;
 }

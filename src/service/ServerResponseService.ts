@@ -38,6 +38,13 @@ export default class ServerResponseService {
         };
     }
 
+    public generateBadRequest(authorizationGranted: boolean = true): ServerResponseResult {
+        return {
+            httpStatusCode: HttpStatusCode.BAD_REQUEST,
+            errorDescription: SeverErrorDescription.BAD_REQUEST,
+            authorizationGranted,
+        };
+    }
     public generateUnauthorized(): ServerResponseResult {
         return {
             httpStatusCode: HttpStatusCode.UNAUTHORIZED,
@@ -46,10 +53,10 @@ export default class ServerResponseService {
         };
     }
 
-    public generateBadRequest(authorizationGranted: boolean = true): ServerResponseResult {
+    public generateForbidden(authorizationGranted: boolean = false): ServerResponseResult {
         return {
-            httpStatusCode: HttpStatusCode.BAD_REQUEST,
-            errorDescription: SeverErrorDescription.BAD_REQUEST,
+            httpStatusCode: HttpStatusCode.FORBIDDEN,
+            errorDescription: SeverErrorDescription.FORBIDDEN,
             authorizationGranted,
         };
     }
@@ -58,14 +65,6 @@ export default class ServerResponseService {
         return {
             httpStatusCode: HttpStatusCode.CONFLICT,
             errorDescription: SeverErrorDescription.CONLICT,
-            authorizationGranted,
-        };
-    }
-
-    public generateForbidden(authorizationGranted: boolean = false): ServerResponseResult {
-        return {
-            httpStatusCode: HttpStatusCode.FORBIDDEN,
-            errorDescription: SeverErrorDescription.FORBIDDEN,
             authorizationGranted,
         };
     }

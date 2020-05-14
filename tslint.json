@@ -13,7 +13,7 @@
       "check-lowercase"
     ],
     "curly": true,
-    "eofline": false,
+    "eofline": true,
     "forin": true,
     "indent": [
       true,

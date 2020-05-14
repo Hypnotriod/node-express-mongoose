@@ -33,7 +33,10 @@ export default class UserAuthService {
             const authenticationToken: string | null = await this.jsonWebTokenService.sign(user);
             const refreshToken: RefreshToken | null = await this.refreshTokenService.createNewToken(user);
             if (authenticationToken && refreshToken) {
-                return this.serverResponseService.generateAuthorized(authenticationToken, refreshToken.token);
+                return this.serverResponseService.generateAuthorized(
+                    authenticationToken,
+                    refreshToken.token,
+                    user.login);
             }
         }
         return this.serverResponseService.generateForbidden();
@@ -63,7 +66,10 @@ export default class UserAuthService {
         const newAuthenticationToken: string | null = await this.jsonWebTokenService.sign(user);
         const newRefreshToken: RefreshToken | null = await this.refreshTokenService.createNewToken(user);
         if (newAuthenticationToken && newRefreshToken) {
-            return this.serverResponseService.generateAuthorized(newAuthenticationToken, newRefreshToken.token);
+            return this.serverResponseService.generateAuthorized(
+                newAuthenticationToken,
+                newRefreshToken.token,
+                user.login);
         } else {
             return this.serverResponseService.generateForbidden();
         }

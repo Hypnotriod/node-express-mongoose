@@ -15,7 +15,7 @@ const schema: Schema = new Schema({
         lowercase: true,
         minlength: 3,
         maxlength: 20,
-        match: RegExp('^([a-z]+[a-z0-9]+\.?[a-z0-9]+)$'),
+        match: RegExp('^([a-z]+[a-z0-9]+\\.?[a-z0-9]+)$'),
     },
     password: {
         type: String,

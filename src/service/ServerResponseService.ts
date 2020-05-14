@@ -29,12 +29,13 @@ export default class ServerResponseService {
         };
     }
 
-    public generateAuthorized(authenticationToken: string, refreshToken: string): AuthorizationResult {
+    public generateAuthorized(authenticationToken: string, refreshToken: string, login: string): AuthorizationResult {
         return {
             httpStatusCode: HttpStatusCode.OK,
             authorizationGranted: true,
             authenticationToken,
             refreshToken,
+            login,
         };
     }
 

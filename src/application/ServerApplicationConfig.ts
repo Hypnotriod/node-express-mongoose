@@ -1,12 +1,14 @@
 import { Algorithm } from 'jsonwebtoken';
 import { LoggerModes } from '@overnightjs/logger';
+import { injectable } from 'tsyringe';
 
 /**
  *
  * @author Ilya Pikin
  */
 
-export default interface ServerApplicationConfig {
+@injectable()
+export default class ServerApplicationConfig {
     production: boolean;
     loggerMode: LoggerModes;
     loggerFilePath?: string;

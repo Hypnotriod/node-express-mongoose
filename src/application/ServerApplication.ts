@@ -24,7 +24,7 @@ export default class ServerApplication extends Server {
 
     private server: http.Server;
 
-    constructor(@inject('ServerApplicationConfig') private readonly config: ServerApplicationConfig) {
+    constructor(private readonly config: ServerApplicationConfig) {
         super(!config.production);
     }
 

@@ -46,7 +46,7 @@ export default class ServicesTestEnvironment {
             sessionSingAlgorithm: 'HS256',
         };
 
-        container.register('ServerApplicationConfig', { useValue: config });
+        container.register(ServerApplicationConfig, { useValue: config });
         return container.resolve(ServerApplication).launchTest();
     }
 

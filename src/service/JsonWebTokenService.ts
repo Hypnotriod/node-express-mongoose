@@ -19,7 +19,7 @@ export type JsonWebToken = {
 @injectable()
 @singleton()
 export default class JsonWebTokenService {
-    constructor(@inject('ServerApplicationConfig') private readonly config: ServerApplicationConfig) { }
+    constructor(private readonly config: ServerApplicationConfig) { }
 
     public sign(user: User): Promise<string | null> {
         return new Promise<string | null>((resolve, reject) => {

@@ -20,5 +20,5 @@ const config: ServerApplicationConfig = {
   sessionSingAlgorithm: process.env.SESSION_SING_ALGORITHM as Algorithm || 'HS256',
 };
 
-container.register('ServerApplicationConfig', { useValue: config });
+container.register(ServerApplicationConfig, { useValue: config });
 container.resolve(ServerApplication).launch();

@@ -36,7 +36,7 @@ export default class JsonWebTokenService {
                     Logger.Err(err);
                     resolve(null);
                 } else {
-                    resolve(encoded);
+                    resolve(encoded!);
                 }
             });
         });

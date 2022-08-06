@@ -83,7 +83,6 @@ export default class ServerApplication extends Server {
         try {
             await mongoose.connect(
                 this.config.dbUri, {
-                useCreateIndex: true,
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
